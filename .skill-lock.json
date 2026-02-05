@@ -1,0 +1,192 @@
+{
+  "version": 3,
+  "skills": {
+    "remotion-best-practices": {
+      "source": "remotion-dev/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/remotion-dev/skills.git",
+      "skillPath": "skills/remotion/SKILL.md",
+      "skillFolderHash": "9571b6f1d9b42233e4ce48ad121933574d67023c",
+      "installedAt": "2026-01-26T12:51:55.249Z",
+      "updatedAt": "2026-01-26T12:55:07.648Z"
+    },
+    "find-skills": {
+      "source": "vercel-labs/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/skills.git",
+      "skillPath": "skills/find-skills/SKILL.md",
+      "skillFolderHash": "c2f31172b6f256272305a5e6e7228b258446899f",
+      "installedAt": "2026-01-28T02:47:12.903Z",
+      "updatedAt": "2026-01-28T02:47:12.903Z"
+    },
+    "agent-browser": {
+      "source": "vercel-labs/agent-browser",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/agent-browser.git",
+      "skillPath": "skills/agent-browser/SKILL.md",
+      "skillFolderHash": "055f4a89276ed2c51b335c2e492ce863afb0cf8f",
+      "installedAt": "2026-01-28T02:47:36.082Z",
+      "updatedAt": "2026-01-28T02:47:56.655Z"
+    },
+    "ui-ux-pro-max": {
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill.git",
+      "skillPath": ".claude/skills/ui-ux-pro-max/SKILL.md",
+      "skillFolderHash": "986c64ad9b8e196a4a737c01872c2eda790daba1",
+      "installedAt": "2026-01-28T02:50:36.207Z",
+      "updatedAt": "2026-02-04T14:15:34.900Z"
+    },
+    "threejs-animation": {
+      "source": "CloudAI-X/threejs-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/CloudAI-X/threejs-skills.git",
+      "skillPath": "skills/threejs-animation/SKILL.md",
+      "skillFolderHash": "0e5c91a99a4838307f8a46d8178d6cd2e0fd3af0",
+      "installedAt": "2026-01-28T09:01:53.921Z",
+      "updatedAt": "2026-01-28T09:01:53.921Z"
+    },
+    "threejs-fundamentals": {
+      "source": "CloudAI-X/threejs-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/CloudAI-X/threejs-skills.git",
+      "skillPath": "skills/threejs-fundamentals/SKILL.md",
+      "skillFolderHash": "918e26abdcc434d3ef7563043a25a97a6209b411",
+      "installedAt": "2026-01-28T09:01:54.133Z",
+      "updatedAt": "2026-01-28T09:01:54.133Z"
+    },
+    "threejs-geometry": {
+      "source": "CloudAI-X/threejs-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/CloudAI-X/threejs-skills.git",
+      "skillPath": "skills/threejs-geometry/SKILL.md",
+      "skillFolderHash": "a8b8defe755f4505ac0258863e05727e37ce056f",
+      "installedAt": "2026-01-28T09:01:54.339Z",
+      "updatedAt": "2026-01-28T09:01:54.339Z"
+    },
+    "threejs-interaction": {
+      "source": "CloudAI-X/threejs-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/CloudAI-X/threejs-skills.git",
+      "skillPath": "skills/threejs-interaction/SKILL.md",
+      "skillFolderHash": "a977e017c2f4f393534b301c8f619183f44c5228",
+      "installedAt": "2026-01-28T09:01:54.550Z",
+      "updatedAt": "2026-01-28T09:01:54.550Z"
+    },
+    "threejs-lighting": {
+      "source": "CloudAI-X/threejs-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/CloudAI-X/threejs-skills.git",
+      "skillPath": "skills/threejs-lighting/SKILL.md",
+      "skillFolderHash": "1a3d8f6fd58d38f7978be27790b959e1dbebf39d",
+      "installedAt": "2026-01-28T09:01:54.752Z",
+      "updatedAt": "2026-01-28T09:01:54.752Z"
+    },
+    "threejs-materials": {
+      "source": "CloudAI-X/threejs-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/CloudAI-X/threejs-skills.git",
+      "skillPath": "skills/threejs-materials/SKILL.md",
+      "skillFolderHash": "c063dc0ffc95c7cf2bbfc183967c5dda9ac93df7",
+      "installedAt": "2026-01-28T09:01:54.959Z",
+      "updatedAt": "2026-01-28T09:01:54.959Z"
+    },
+    "threejs-loaders": {
+      "source": "CloudAI-X/threejs-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/CloudAI-X/threejs-skills.git",
+      "skillPath": "skills/threejs-loaders/SKILL.md",
+      "skillFolderHash": "ce4ab5647b2584a3b8b12d9a6f23604cfc59ca50",
+      "installedAt": "2026-01-28T09:01:55.170Z",
+      "updatedAt": "2026-01-28T09:01:55.170Z"
+    },
+    "threejs-postprocessing": {
+      "source": "CloudAI-X/threejs-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/CloudAI-X/threejs-skills.git",
+      "skillPath": "skills/threejs-postprocessing/SKILL.md",
+      "skillFolderHash": "699f67f0c2f4d50cd493b03c895e0074f7b47a7f",
+      "installedAt": "2026-01-28T09:01:55.360Z",
+      "updatedAt": "2026-01-28T09:01:55.360Z"
+    },
+    "threejs-shaders": {
+      "source": "CloudAI-X/threejs-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/CloudAI-X/threejs-skills.git",
+      "skillPath": "skills/threejs-shaders/SKILL.md",
+      "skillFolderHash": "5b8907aa3a6497db9281a6a6b4f76437ad78faee",
+      "installedAt": "2026-01-28T09:01:55.566Z",
+      "updatedAt": "2026-01-28T09:01:55.566Z"
+    },
+    "threejs-textures": {
+      "source": "CloudAI-X/threejs-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/CloudAI-X/threejs-skills.git",
+      "skillPath": "skills/threejs-textures/SKILL.md",
+      "skillFolderHash": "0931e05e06091787935ef83a33d25a7e58772b73",
+      "installedAt": "2026-01-28T09:01:55.772Z",
+      "updatedAt": "2026-01-28T09:01:55.772Z"
+    },
+    "topic-collector": {
+      "source": "zephyrwang6/myskill",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/zephyrwang6/myskill.git",
+      "skillPath": "topic-collector/SKILL.md",
+      "skillFolderHash": "aaa28c627d4df315132c9644a763cf2ac770d209",
+      "installedAt": "2026-01-30T12:57:08.752Z",
+      "updatedAt": "2026-01-30T12:57:08.752Z"
+    },
+    "topic-generator": {
+      "source": "zephyrwang6/myskill",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/zephyrwang6/myskill.git",
+      "skillPath": "topic-generator/SKILL.md",
+      "skillFolderHash": "c3c252acc74a08775c86590813a17c7c5cc6c577",
+      "installedAt": "2026-01-30T12:57:37.701Z",
+      "updatedAt": "2026-01-30T12:57:37.701Z"
+    },
+    "topic-reviewer": {
+      "source": "zephyrwang6/myskill",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/zephyrwang6/myskill.git",
+      "skillPath": "topic-reviewer/SKILL.md",
+      "skillFolderHash": "da8cf0bfbc23c42678a3ba2aa3aedcfeba567a1f",
+      "installedAt": "2026-01-30T12:58:17.933Z",
+      "updatedAt": "2026-01-30T12:58:17.933Z"
+    },
+    "article-review": {
+      "source": "zephyrwang6/myskill",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/zephyrwang6/myskill.git",
+      "skillPath": "article-review/SKILL.md",
+      "skillFolderHash": "445c1b54caaed333458883a365c11557e2081140",
+      "installedAt": "2026-01-30T12:58:49.099Z",
+      "updatedAt": "2026-01-30T12:58:49.099Z"
+    },
+    "humanizer-zh": {
+      "source": "op7418/Humanizer-zh",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/op7418/Humanizer-zh.git",
+      "skillPath": "SKILL.md",
+      "skillFolderHash": "91f3d394db8419c20d67ebe22a96cf8fee0a404b",
+      "installedAt": "2026-01-31T08:42:24.179Z",
+      "updatedAt": "2026-01-31T08:42:24.179Z"
+    }
+  },
+  "dismissed": {
+    "findSkillsPrompt": true
+  },
+  "lastSelectedAgents": [
+    "amp",
+    "codex",
+    "gemini-cli",
+    "github-copilot",
+    "kimi-cli",
+    "opencode",
+    "replit",
+    "antigravity",
+    "trae",
+    "pi",
+    "claude-code"
+  ]
+}
