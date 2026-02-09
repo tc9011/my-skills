@@ -171,6 +171,168 @@
       "skillFolderHash": "91f3d394db8419c20d67ebe22a96cf8fee0a404b",
       "installedAt": "2026-01-31T08:42:24.179Z",
       "updatedAt": "2026-01-31T08:42:24.179Z"
+    },
+    "vue": {
+      "source": "antfu/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/antfu/skills.git",
+      "skillPath": "skills/vue/SKILL.md",
+      "skillFolderHash": "cff239de1fa9a889b40166c85d13157b8ae5408c",
+      "installedAt": "2026-02-06T08:20:13.478Z",
+      "updatedAt": "2026-02-06T08:20:13.478Z"
+    },
+    "xlsx": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/anthropics/skills.git",
+      "skillPath": "skills/xlsx/SKILL.md",
+      "skillFolderHash": "f5fb1cdb7993b2feee8367e983e9d4d58d2eedd4",
+      "installedAt": "2026-02-06T18:31:31.644Z",
+      "updatedAt": "2026-02-07T03:47:34.315Z"
+    },
+    "template-skill": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/anthropics/skills.git",
+      "skillPath": "template/SKILL.md",
+      "skillFolderHash": "a38aa7fa73fd2835b9ce77a60274f7dc62d015a6",
+      "installedAt": "2026-02-06T19:01:22.274Z",
+      "updatedAt": "2026-02-06T19:01:22.274Z"
+    },
+    "algorithmic-art": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/anthropics/skills.git",
+      "skillPath": "skills/algorithmic-art/SKILL.md",
+      "skillFolderHash": "22db2d12091c56340987a877047435ba84a1cdb2",
+      "installedAt": "2026-02-06T19:01:22.672Z",
+      "updatedAt": "2026-02-06T19:01:22.672Z"
+    },
+    "brand-guidelines": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/anthropics/skills.git",
+      "skillPath": "skills/brand-guidelines/SKILL.md",
+      "skillFolderHash": "7dc45f289fa37f9763a993008d9500e9a157fa4a",
+      "installedAt": "2026-02-06T19:01:23.072Z",
+      "updatedAt": "2026-02-06T19:01:23.072Z"
+    },
+    "canvas-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/anthropics/skills.git",
+      "skillPath": "skills/canvas-design/SKILL.md",
+      "skillFolderHash": "928af0a3279dc4e0c0e6ceaf407a8542a2bb2aa2",
+      "installedAt": "2026-02-06T19:01:23.479Z",
+      "updatedAt": "2026-02-06T19:01:23.479Z"
+    },
+    "doc-coauthoring": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/anthropics/skills.git",
+      "skillPath": "skills/doc-coauthoring/SKILL.md",
+      "skillFolderHash": "d9df960e61fe2bafe9183e37de6f9f6b73b74087",
+      "installedAt": "2026-02-06T19:01:23.891Z",
+      "updatedAt": "2026-02-06T19:01:23.891Z"
+    },
+    "docx": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/anthropics/skills.git",
+      "skillPath": "skills/docx/SKILL.md",
+      "skillFolderHash": "2c1fc2d09dc4d450c58a307e72bc20c7d477e891",
+      "installedAt": "2026-02-06T19:01:24.318Z",
+      "updatedAt": "2026-02-06T19:01:24.318Z"
+    },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/anthropics/skills.git",
+      "skillPath": "skills/frontend-design/SKILL.md",
+      "skillFolderHash": "928950704df8a8b885c03de5da626331e6f29cf8",
+      "installedAt": "2026-02-06T19:01:24.738Z",
+      "updatedAt": "2026-02-06T19:01:24.738Z"
+    },
+    "internal-comms": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/anthropics/skills.git",
+      "skillPath": "skills/internal-comms/SKILL.md",
+      "skillFolderHash": "8e2c21adc81f221477a4d3ecec07abcbc8a9320a",
+      "installedAt": "2026-02-06T19:01:25.167Z",
+      "updatedAt": "2026-02-06T19:01:25.167Z"
+    },
+    "mcp-builder": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/anthropics/skills.git",
+      "skillPath": "skills/mcp-builder/SKILL.md",
+      "skillFolderHash": "9173e2c2107aac82d4ca6c726d71e89d11760470",
+      "installedAt": "2026-02-06T19:01:25.596Z",
+      "updatedAt": "2026-02-06T19:01:25.596Z"
+    },
+    "pdf": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/anthropics/skills.git",
+      "skillPath": "skills/pdf/SKILL.md",
+      "skillFolderHash": "8b61e7d0b4ba45033cdaf7948d77d7208853e427",
+      "installedAt": "2026-02-06T19:01:26.039Z",
+      "updatedAt": "2026-02-06T19:01:26.039Z"
+    },
+    "pptx": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/anthropics/skills.git",
+      "skillPath": "skills/pptx/SKILL.md",
+      "skillFolderHash": "697cd150ac682cb861a2ccd80a05aa00f1d4d77b",
+      "installedAt": "2026-02-06T19:01:26.449Z",
+      "updatedAt": "2026-02-06T19:01:26.449Z"
+    },
+    "skill-creator": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/anthropics/skills.git",
+      "skillPath": "skills/skill-creator/SKILL.md",
+      "skillFolderHash": "7bd8fc459f09f0e14dcc2adbb4a5a58e60ea755c",
+      "installedAt": "2026-02-06T19:01:26.848Z",
+      "updatedAt": "2026-02-06T19:01:26.848Z"
+    },
+    "slack-gif-creator": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/anthropics/skills.git",
+      "skillPath": "skills/slack-gif-creator/SKILL.md",
+      "skillFolderHash": "d5cd683598c6ac0174bdb3b3b5be1dfc35430c12",
+      "installedAt": "2026-02-06T19:01:27.253Z",
+      "updatedAt": "2026-02-06T19:01:27.253Z"
+    },
+    "theme-factory": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/anthropics/skills.git",
+      "skillPath": "skills/theme-factory/SKILL.md",
+      "skillFolderHash": "007940e80de6ae577a87b2b343b1a5eae715df2b",
+      "installedAt": "2026-02-06T19:01:27.679Z",
+      "updatedAt": "2026-02-06T19:01:27.679Z"
+    },
+    "web-artifacts-builder": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/anthropics/skills.git",
+      "skillPath": "skills/web-artifacts-builder/SKILL.md",
+      "skillFolderHash": "9ecbeae7c17caa478c5b753ba1bd258688075b5f",
+      "installedAt": "2026-02-06T19:01:28.088Z",
+      "updatedAt": "2026-02-06T19:01:28.088Z"
+    },
+    "webapp-testing": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/anthropics/skills.git",
+      "skillPath": "skills/webapp-testing/SKILL.md",
+      "skillFolderHash": "74cb751576f9e9af2aedff47e67861ef26db2dc4",
+      "installedAt": "2026-02-06T19:01:28.497Z",
+      "updatedAt": "2026-02-06T19:01:28.497Z"
     }
   },
   "dismissed": {
@@ -183,7 +345,6 @@
     "github-copilot",
     "kimi-cli",
     "opencode",
-    "replit",
     "antigravity",
     "trae",
     "pi",
