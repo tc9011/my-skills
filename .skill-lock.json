@@ -333,6 +333,16 @@
       "skillFolderHash": "74cb751576f9e9af2aedff47e67861ef26db2dc4",
       "installedAt": "2026-02-06T19:01:28.497Z",
       "updatedAt": "2026-02-06T19:01:28.497Z"
+    },
+    "baoyu-cover-image": {
+      "source": "jimliu/baoyu-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/jimliu/baoyu-skills.git",
+      "skillPath": "skills/baoyu-cover-image/SKILL.md",
+      "skillFolderHash": "ea268bfc74140f782ab4de975c5e981fd3007eea",
+      "pluginName": "content-skills",
+      "installedAt": "2026-02-27T07:30:32.869Z",
+      "updatedAt": "2026-02-27T07:30:32.869Z"
     }
   },
   "dismissed": {
@@ -340,7 +350,9 @@
   },
   "lastSelectedAgents": [
     "amp",
+    "cline",
     "codex",
+    "cursor",
     "gemini-cli",
     "github-copilot",
     "kimi-cli",
@@ -348,6 +360,7 @@
     "antigravity",
     "trae",
     "pi",
-    "claude-code"
+    "claude-code",
+    "openclaw"
   ]
 }
