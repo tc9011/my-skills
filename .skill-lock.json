@@ -6,9 +6,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/remotion-dev/skills.git",
       "skillPath": "skills/remotion/SKILL.md",
-      "skillFolderHash": "2891cb4d34e2a3619d29079459846c4864961af1",
+      "skillFolderHash": "666980630dc910c6b623f3bab13280af47d6995e",
       "installedAt": "2026-01-26T12:51:55.249Z",
-      "updatedAt": "2026-02-26T16:13:46.458Z"
+      "updatedAt": "2026-03-01T10:59:34.603Z"
     },
     "find-skills": {
       "source": "vercel-labs/skills",
@@ -343,6 +343,69 @@
       "pluginName": "content-skills",
       "installedAt": "2026-02-27T07:30:32.869Z",
       "updatedAt": "2026-02-27T07:30:32.869Z"
+    },
+    "code-review-expert": {
+      "source": "sanyuan0704/code-review-expert",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/sanyuan0704/code-review-expert.git",
+      "skillPath": "SKILL.md",
+      "skillFolderHash": "bc0aefbe7ddb8b169d359af3b7e7e16de284cc1b",
+      "installedAt": "2026-02-28T13:55:31.475Z",
+      "updatedAt": "2026-02-28T13:55:31.475Z"
+    },
+    "app-store-screenshot-studio": {
+      "source": "gitethanwoo/app-store-screenshot-studio",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/gitethanwoo/app-store-screenshot-studio.git",
+      "skillPath": "SKILL.md",
+      "skillFolderHash": "f83113b707ac0cba6e85133d3c9a69028e5bd5e6",
+      "installedAt": "2026-03-01T10:58:59.886Z",
+      "updatedAt": "2026-03-01T10:58:59.886Z"
+    },
+    "playwright-cli": {
+      "source": "microsoft/playwright-cli",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/microsoft/playwright-cli.git",
+      "skillPath": "skills/playwright-cli/SKILL.md",
+      "skillFolderHash": "a5a8823e403adc13b2488aae9968d6d92adbd2d7",
+      "installedAt": "2026-03-01T11:11:51.556Z",
+      "updatedAt": "2026-03-01T11:11:51.556Z"
+    },
+    "playwright-generate-test": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/github/awesome-copilot.git",
+      "skillPath": "skills/playwright-generate-test/SKILL.md",
+      "skillFolderHash": "80b315fa5ec450946b5eb78c19fbd989dff33b11",
+      "installedAt": "2026-03-01T11:12:15.086Z",
+      "updatedAt": "2026-03-01T11:12:15.086Z"
+    },
+    "playwright-explore-website": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/github/awesome-copilot.git",
+      "skillPath": "skills/playwright-explore-website/SKILL.md",
+      "skillFolderHash": "16c686b950d767e0981287c3599ca3619ce31876",
+      "installedAt": "2026-03-01T11:12:38.206Z",
+      "updatedAt": "2026-03-01T11:12:38.206Z"
+    },
+    "playwright-automation-fill-in-form": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/github/awesome-copilot.git",
+      "skillPath": "skills/playwright-automation-fill-in-form/SKILL.md",
+      "skillFolderHash": "dba0fe8e328bdc37d6c851d2367671fed9ae6c5d",
+      "installedAt": "2026-03-01T11:12:59.565Z",
+      "updatedAt": "2026-03-01T11:12:59.565Z"
+    },
+    "playwright": {
+      "source": "openai/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/openai/skills.git",
+      "skillPath": "skills/.curated/playwright/SKILL.md",
+      "skillFolderHash": "74888f3c1d5581aea6415e78d5fbd760a8ab2a41",
+      "installedAt": "2026-03-01T11:13:54.459Z",
+      "updatedAt": "2026-03-01T11:13:54.459Z"
     }
   },
   "dismissed": {
@@ -360,7 +423,6 @@
     "antigravity",
     "trae",
     "pi",
-    "claude-code",
-    "openclaw"
+    "claude-code"
   ]
 }
