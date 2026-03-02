@@ -349,10 +349,10 @@
       "source": "sanyuan0704/code-review-expert",
       "sourceType": "github",
       "sourceUrl": "https://github.com/sanyuan0704/code-review-expert.git",
-      "skillPath": "SKILL.md",
-      "skillFolderHash": "bc0aefbe7ddb8b169d359af3b7e7e16de284cc1b",
+      "skillPath": "skills/code-review-expert/SKILL.md",
+      "skillFolderHash": "d3ff60f85c38178f30c5fe25a396030fb74bc859",
       "installedAt": "2026-02-28T13:55:31.475Z",
-      "updatedAt": "2026-02-28T13:55:31.475Z"
+      "updatedAt": "2026-03-02T13:47:54.459Z"
     },
     "app-store-screenshot-studio": {
       "source": "gitethanwoo/app-store-screenshot-studio",
@@ -596,6 +596,24 @@
       "skillFolderHash": "45b116adcbbb159d2103afc5d6ae704ba47427f8",
       "installedAt": "2026-03-02T13:39:48.074Z",
       "updatedAt": "2026-03-02T13:39:48.074Z"
+    },
+    "sigma": {
+      "source": "sanyuan0704/code-review-expert",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/sanyuan0704/code-review-expert.git",
+      "skillPath": "skills/sigma/SKILL.md",
+      "skillFolderHash": "f66fcdefe6801e8c70f8e172d52faa6445e37ab5",
+      "installedAt": "2026-03-02T13:47:54.909Z",
+      "updatedAt": "2026-03-02T13:47:54.909Z"
+    },
+    "skill-forge": {
+      "source": "sanyuan0704/code-review-expert",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/sanyuan0704/code-review-expert.git",
+      "skillPath": "skills/skill-forge/SKILL.md",
+      "skillFolderHash": "71ad68c55a1ccd175e2175e8f08a77d84cf8614d",
+      "installedAt": "2026-03-02T13:47:55.344Z",
+      "updatedAt": "2026-03-02T13:47:55.344Z"
     }
   },
   "dismissed": {

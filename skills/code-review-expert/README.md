@@ -5,13 +5,7 @@ A comprehensive code review skill for AI agents. Performs structured reviews wit
 ## Installation
 
 ```bash
-npx skills add sanyuan0704/code-review-expert
-```
-
-Or via Agent Skills:
-
-```bash
-npx agent-skills-cli install @sanyuan0704/code-review-expert
+npx skills add sanyuan0704/sanyuan-skills --path skills/code-review-expert
 ```
 
 ## Features
