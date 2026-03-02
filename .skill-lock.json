@@ -25,8 +25,9 @@
       "sourceUrl": "https://github.com/vercel-labs/agent-browser.git",
       "skillPath": "skills/agent-browser/SKILL.md",
       "skillFolderHash": "88b7e785240d14ab80eb11abdd0cbd27b20055c6",
+      "pluginName": "agent-browser",
       "installedAt": "2026-01-28T02:47:36.082Z",
-      "updatedAt": "2026-02-26T16:13:53.807Z"
+      "updatedAt": "2026-03-02T13:39:47.116Z"
     },
     "ui-ux-pro-max": {
       "source": "nextlevelbuilder/ui-ux-pro-max-skill",
@@ -290,13 +291,13 @@
       "updatedAt": "2026-02-26T16:14:19.016Z"
     },
     "skill-creator": {
-      "source": "anthropics/skills",
+      "source": "vercel-labs/agent-browser",
       "sourceType": "github",
-      "sourceUrl": "https://github.com/anthropics/skills.git",
-      "skillPath": "skills/skill-creator/SKILL.md",
-      "skillFolderHash": "5c26c1472b98de33a48074ba5d3efe3a727b8e37",
+      "sourceUrl": "https://github.com/vercel-labs/agent-browser.git",
+      "skillPath": ".agents/skills/skill-creator/SKILL.md",
+      "skillFolderHash": "a235030e055c7292a60525ead3c8b06fb2bcf831",
       "installedAt": "2026-02-06T19:01:26.848Z",
-      "updatedAt": "2026-02-26T16:14:27.148Z"
+      "updatedAt": "2026-03-02T13:39:47.832Z"
     },
     "slack-gif-creator": {
       "source": "anthropics/skills",
@@ -406,6 +407,195 @@
       "skillFolderHash": "74888f3c1d5581aea6415e78d5fbd760a8ab2a41",
       "installedAt": "2026-03-01T11:13:54.459Z",
       "updatedAt": "2026-03-01T11:13:54.459Z"
+    },
+    "building-native-ui": {
+      "source": "expo/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/expo/skills.git",
+      "skillPath": "plugins/expo-app-design/skills/building-native-ui/SKILL.md",
+      "skillFolderHash": "0078663cbdc42e388d2eb9c291dda1a0774eee29",
+      "installedAt": "2026-03-02T13:33:08.445Z",
+      "updatedAt": "2026-03-02T13:33:08.445Z"
+    },
+    "expo-api-routes": {
+      "source": "expo/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/expo/skills.git",
+      "skillPath": "plugins/expo-app-design/skills/expo-api-routes/SKILL.md",
+      "skillFolderHash": "43ff4f9cb35a82e83b97cd48e0cd4dfa7aa912a1",
+      "installedAt": "2026-03-02T13:34:08.431Z",
+      "updatedAt": "2026-03-02T13:34:08.431Z"
+    },
+    "expo-cicd-workflows": {
+      "source": "expo/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/expo/skills.git",
+      "skillPath": "plugins/expo-deployment/skills/expo-cicd-workflows/SKILL.md",
+      "skillFolderHash": "3e9753a3ba093b8be385deb28db384d183f1e8b9",
+      "installedAt": "2026-03-02T13:34:08.649Z",
+      "updatedAt": "2026-03-02T13:34:08.649Z"
+    },
+    "expo-deployment": {
+      "source": "expo/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/expo/skills.git",
+      "skillPath": "plugins/expo-deployment/skills/expo-deployment/SKILL.md",
+      "skillFolderHash": "1b85cb69d451371559ff6af4f08283a0a6679d1c",
+      "installedAt": "2026-03-02T13:34:08.876Z",
+      "updatedAt": "2026-03-02T13:34:08.876Z"
+    },
+    "expo-dev-client": {
+      "source": "expo/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/expo/skills.git",
+      "skillPath": "plugins/expo-app-design/skills/expo-dev-client/SKILL.md",
+      "skillFolderHash": "5adb1357248d76daeb2a80ee65824819b0b21a49",
+      "installedAt": "2026-03-02T13:34:09.094Z",
+      "updatedAt": "2026-03-02T13:34:09.094Z"
+    },
+    "expo-tailwind-setup": {
+      "source": "expo/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/expo/skills.git",
+      "skillPath": "plugins/expo-app-design/skills/expo-tailwind-setup/SKILL.md",
+      "skillFolderHash": "bf60256bc226ad60a1eb0a6ce5e32b4aa83b5576",
+      "installedAt": "2026-03-02T13:34:09.314Z",
+      "updatedAt": "2026-03-02T13:34:09.314Z"
+    },
+    "native-data-fetching": {
+      "source": "expo/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/expo/skills.git",
+      "skillPath": "plugins/expo-app-design/skills/native-data-fetching/SKILL.md",
+      "skillFolderHash": "43d26c96331a2240e33d319998d21da4191b5587",
+      "installedAt": "2026-03-02T13:34:09.532Z",
+      "updatedAt": "2026-03-02T13:34:09.532Z"
+    },
+    "upgrading-expo": {
+      "source": "expo/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/expo/skills.git",
+      "skillPath": "plugins/upgrading-expo/skills/upgrading-expo/SKILL.md",
+      "skillFolderHash": "cfcc9ba12542031f7332426e2eb1ccf38c113c5e",
+      "installedAt": "2026-03-02T13:34:09.751Z",
+      "updatedAt": "2026-03-02T13:34:09.751Z"
+    },
+    "use-dom": {
+      "source": "expo/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/expo/skills.git",
+      "skillPath": "plugins/expo-app-design/skills/use-dom/SKILL.md",
+      "skillFolderHash": "ce309744c9ec448b2a4ac7152910da46797e316a",
+      "installedAt": "2026-03-02T13:34:09.967Z",
+      "updatedAt": "2026-03-02T13:34:09.967Z"
+    },
+    "vercel-composition-patterns": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
+      "skillPath": "skills/composition-patterns/SKILL.md",
+      "skillFolderHash": "bf90d0a4b83ea054653350f9c67f6de235d3a368",
+      "installedAt": "2026-03-02T13:35:58.585Z",
+      "updatedAt": "2026-03-02T13:35:58.585Z"
+    },
+    "vercel-react-best-practices": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
+      "skillPath": "skills/react-best-practices/SKILL.md",
+      "skillFolderHash": "079b06a135401704ea94ab74c7c9d86c92ba259f",
+      "installedAt": "2026-03-02T13:35:58.815Z",
+      "updatedAt": "2026-03-02T13:35:58.815Z"
+    },
+    "vercel-react-native-skills": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
+      "skillPath": "skills/react-native-skills/SKILL.md",
+      "skillFolderHash": "8b4c6a51914e2111ab6f4f00cb81778652aa241d",
+      "installedAt": "2026-03-02T13:35:59.047Z",
+      "updatedAt": "2026-03-02T13:35:59.047Z"
+    },
+    "web-design-guidelines": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
+      "skillPath": "skills/web-design-guidelines/SKILL.md",
+      "skillFolderHash": "3116f3e62dbd02b44a598b1aa690d2a8938e8f89",
+      "installedAt": "2026-03-02T13:35:59.277Z",
+      "updatedAt": "2026-03-02T13:35:59.277Z"
+    },
+    "defuddle": {
+      "source": "kepano/obsidian-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/kepano/obsidian-skills.git",
+      "skillPath": "skills/defuddle/SKILL.md",
+      "skillFolderHash": "b487b517cd4deb370358772a5d26a6d39f4c207f",
+      "installedAt": "2026-03-02T13:38:02.992Z",
+      "updatedAt": "2026-03-02T13:38:02.992Z"
+    },
+    "json-canvas": {
+      "source": "kepano/obsidian-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/kepano/obsidian-skills.git",
+      "skillPath": "skills/json-canvas/SKILL.md",
+      "skillFolderHash": "9df7971db7ffebf96f2a207840b9f4765aa11b04",
+      "installedAt": "2026-03-02T13:38:03.212Z",
+      "updatedAt": "2026-03-02T13:38:03.212Z"
+    },
+    "obsidian-bases": {
+      "source": "kepano/obsidian-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/kepano/obsidian-skills.git",
+      "skillPath": "skills/obsidian-bases/SKILL.md",
+      "skillFolderHash": "4bef60bb848bfb02b4172b552626d5741b0d4057",
+      "installedAt": "2026-03-02T13:38:03.427Z",
+      "updatedAt": "2026-03-02T13:38:03.427Z"
+    },
+    "obsidian-cli": {
+      "source": "kepano/obsidian-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/kepano/obsidian-skills.git",
+      "skillPath": "skills/obsidian-cli/SKILL.md",
+      "skillFolderHash": "96254a554e480359de7b685571876f2e7f9ba57d",
+      "installedAt": "2026-03-02T13:38:03.634Z",
+      "updatedAt": "2026-03-02T13:38:03.634Z"
+    },
+    "obsidian-markdown": {
+      "source": "kepano/obsidian-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/kepano/obsidian-skills.git",
+      "skillPath": "skills/obsidian-markdown/SKILL.md",
+      "skillFolderHash": "5caf5d9e7de204f3904216857545f2aa36bcfcac",
+      "installedAt": "2026-03-02T13:38:03.844Z",
+      "updatedAt": "2026-03-02T13:38:03.844Z"
+    },
+    "dogfood": {
+      "source": "vercel-labs/agent-browser",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/agent-browser.git",
+      "skillPath": "skills/dogfood/SKILL.md",
+      "skillFolderHash": "ad41914e08b955060a80801619d6a36206187e9e",
+      "installedAt": "2026-03-02T13:39:47.348Z",
+      "updatedAt": "2026-03-02T13:39:47.348Z"
+    },
+    "electron": {
+      "source": "vercel-labs/agent-browser",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/agent-browser.git",
+      "skillPath": "skills/electron/SKILL.md",
+      "skillFolderHash": "262130632e186c3ee2d153b6d5b5dd6e60b8236f",
+      "installedAt": "2026-03-02T13:39:47.590Z",
+      "updatedAt": "2026-03-02T13:39:47.590Z"
+    },
+    "slack": {
+      "source": "vercel-labs/agent-browser",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/agent-browser.git",
+      "skillPath": "skills/slack/SKILL.md",
+      "skillFolderHash": "45b116adcbbb159d2103afc5d6ae704ba47427f8",
+      "installedAt": "2026-03-02T13:39:48.074Z",
+      "updatedAt": "2026-03-02T13:39:48.074Z"
     }
   },
   "dismissed": {
@@ -423,6 +613,7 @@
     "antigravity",
     "trae",
     "pi",
-    "claude-code"
+    "claude-code",
+    "openclaw"
   ]
 }
