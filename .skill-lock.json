@@ -636,10 +636,6 @@
     "gemini-cli",
     "github-copilot",
     "kimi-cli",
-    "opencode",
-    "antigravity",
-    "trae",
-    "pi",
-    "claude-code"
+    "opencode"
   ]
 }
