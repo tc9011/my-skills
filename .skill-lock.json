@@ -340,9 +340,10 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/jimliu/baoyu-skills.git",
       "skillPath": "skills/baoyu-cover-image/SKILL.md",
-      "skillFolderHash": "d13e92a835bcaebc7735cf73c4b709e9800b304a",
+      "skillFolderHash": "8e92740e14ac703ffc23f130b625a408cff5fde2",
+      "pluginName": "content-skills",
       "installedAt": "2026-02-27T07:30:32.869Z",
-      "updatedAt": "2026-03-06T03:40:36.008Z"
+      "updatedAt": "2026-03-09T07:38:49.555Z"
     },
     "code-review-expert": {
       "source": "sanyuan0704/code-review-expert",
@@ -775,6 +776,36 @@
       "skillFolderHash": "c8f7b87dca283841efbbb8769e67ca0512474c42",
       "installedAt": "2026-03-09T02:29:42.215Z",
       "updatedAt": "2026-03-09T02:29:42.215Z"
+    },
+    "baoyu-translate": {
+      "source": "jimliu/baoyu-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/jimliu/baoyu-skills.git",
+      "skillPath": "skills/baoyu-translate/SKILL.md",
+      "skillFolderHash": "d954bff6d965eb7aab24575a41657fabd3473c1f",
+      "pluginName": "utility-skills",
+      "installedAt": "2026-03-09T07:38:50.128Z",
+      "updatedAt": "2026-03-09T07:38:50.128Z"
+    },
+    "baoyu-url-to-markdown": {
+      "source": "jimliu/baoyu-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/jimliu/baoyu-skills.git",
+      "skillPath": "skills/baoyu-url-to-markdown/SKILL.md",
+      "skillFolderHash": "c12816f4951ae4fe6e25db3af95648a167871f61",
+      "pluginName": "utility-skills",
+      "installedAt": "2026-03-09T07:38:50.632Z",
+      "updatedAt": "2026-03-09T07:38:50.632Z"
+    },
+    "baoyu-article-illustrator": {
+      "source": "jimliu/baoyu-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/jimliu/baoyu-skills.git",
+      "skillPath": "skills/baoyu-article-illustrator/SKILL.md",
+      "skillFolderHash": "83fa5a0245dc9932d2ab8f8ffe6dcbfe7b03fdd7",
+      "pluginName": "content-skills",
+      "installedAt": "2026-03-09T07:38:51.119Z",
+      "updatedAt": "2026-03-09T07:38:51.119Z"
     }
   },
   "dismissed": {
