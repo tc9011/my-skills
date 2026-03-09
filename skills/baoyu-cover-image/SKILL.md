@@ -128,8 +128,15 @@ Analyze + Save Refs → [Output Dir] → [Confirm: 6 Dimensions] → Prompt → 
 
 Check EXTEND.md existence (priority: project → user):
 ```bash
+# macOS, Linux, WSL, Git Bash
 test -f .baoyu-skills/baoyu-cover-image/EXTEND.md && echo "project"
 test -f "$HOME/.baoyu-skills/baoyu-cover-image/EXTEND.md" && echo "user"
+```
+
+```powershell
+# PowerShell (Windows)
+if (Test-Path .baoyu-skills/baoyu-cover-image/EXTEND.md) { "project" }
+if (Test-Path "$HOME/.baoyu-skills/baoyu-cover-image/EXTEND.md") { "user" }
 ```
 
 | Result | Action |

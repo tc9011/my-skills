@@ -24,10 +24,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/vercel-labs/agent-browser.git",
       "skillPath": "skills/agent-browser/SKILL.md",
-      "skillFolderHash": "88b7e785240d14ab80eb11abdd0cbd27b20055c6",
-      "pluginName": "agent-browser",
+      "skillFolderHash": "368263b629b1c1af2abd68ff2e45fa40ead82601",
       "installedAt": "2026-01-28T02:47:36.082Z",
-      "updatedAt": "2026-03-02T13:39:47.116Z"
+      "updatedAt": "2026-03-06T03:40:26.942Z"
     },
     "ui-ux-pro-max": {
       "source": "nextlevelbuilder/ui-ux-pro-max-skill",
@@ -246,13 +245,13 @@
       "updatedAt": "2026-02-26T16:14:03.252Z"
     },
     "frontend-design": {
-      "source": "anthropics/skills",
+      "source": "pbakaus/impeccable",
       "sourceType": "github",
-      "sourceUrl": "https://github.com/anthropics/skills.git",
-      "skillPath": "skills/frontend-design/SKILL.md",
-      "skillFolderHash": "928950704df8a8b885c03de5da626331e6f29cf8",
+      "sourceUrl": "https://github.com/pbakaus/impeccable.git",
+      "skillPath": ".claude/skills/frontend-design/SKILL.md",
+      "skillFolderHash": "b90c422789595fe447d43acbcfde4531bc79c4e1",
       "installedAt": "2026-02-06T19:01:24.738Z",
-      "updatedAt": "2026-02-06T19:01:24.738Z"
+      "updatedAt": "2026-03-09T02:29:38.139Z"
     },
     "internal-comms": {
       "source": "anthropics/skills",
@@ -291,13 +290,14 @@
       "updatedAt": "2026-02-26T16:14:19.016Z"
     },
     "skill-creator": {
-      "source": "vercel-labs/agent-browser",
+      "source": "anthropics/skills",
       "sourceType": "github",
-      "sourceUrl": "https://github.com/vercel-labs/agent-browser.git",
-      "skillPath": ".agents/skills/skill-creator/SKILL.md",
-      "skillFolderHash": "a235030e055c7292a60525ead3c8b06fb2bcf831",
+      "sourceUrl": "https://github.com/anthropics/skills.git",
+      "skillPath": "skills/skill-creator/SKILL.md",
+      "skillFolderHash": "5c26c1472b98de33a48074ba5d3efe3a727b8e37",
+      "pluginName": "example-skills",
       "installedAt": "2026-02-06T19:01:26.848Z",
-      "updatedAt": "2026-03-02T13:39:47.832Z"
+      "updatedAt": "2026-03-06T03:37:54.957Z"
     },
     "slack-gif-creator": {
       "source": "anthropics/skills",
@@ -340,10 +340,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/jimliu/baoyu-skills.git",
       "skillPath": "skills/baoyu-cover-image/SKILL.md",
-      "skillFolderHash": "ea268bfc74140f782ab4de975c5e981fd3007eea",
-      "pluginName": "content-skills",
+      "skillFolderHash": "d13e92a835bcaebc7735cf73c4b709e9800b304a",
       "installedAt": "2026-02-27T07:30:32.869Z",
-      "updatedAt": "2026-02-27T07:30:32.869Z"
+      "updatedAt": "2026-03-06T03:40:36.008Z"
     },
     "code-review-expert": {
       "source": "sanyuan0704/code-review-expert",
@@ -476,9 +475,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/expo/skills.git",
       "skillPath": "plugins/upgrading-expo/skills/upgrading-expo/SKILL.md",
-      "skillFolderHash": "cfcc9ba12542031f7332426e2eb1ccf38c113c5e",
+      "skillFolderHash": "eac4fc92f3aac2e1e0034b488193d18abee666d2",
       "installedAt": "2026-03-02T13:34:09.751Z",
-      "updatedAt": "2026-03-02T13:34:09.751Z"
+      "updatedAt": "2026-03-06T03:40:42.943Z"
     },
     "use-dom": {
       "source": "expo/skills",
@@ -503,9 +502,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
       "skillPath": "skills/react-best-practices/SKILL.md",
-      "skillFolderHash": "079b06a135401704ea94ab74c7c9d86c92ba259f",
+      "skillFolderHash": "fce8b5a24ff4ff2fc5db6aa1051e03b53c6b5bf1",
       "installedAt": "2026-03-02T13:35:58.815Z",
-      "updatedAt": "2026-03-02T13:35:58.815Z"
+      "updatedAt": "2026-03-06T03:40:51.672Z"
     },
     "vercel-react-native-skills": {
       "source": "vercel-labs/agent-skills",
@@ -530,9 +529,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/kepano/obsidian-skills.git",
       "skillPath": "skills/defuddle/SKILL.md",
-      "skillFolderHash": "b487b517cd4deb370358772a5d26a6d39f4c207f",
+      "skillFolderHash": "d365ce41229386873b7868d05c13fac80cd9c7fc",
       "installedAt": "2026-03-02T13:38:02.992Z",
-      "updatedAt": "2026-03-02T13:38:02.992Z"
+      "updatedAt": "2026-03-06T03:40:58.119Z"
     },
     "json-canvas": {
       "source": "kepano/obsidian-skills",
@@ -623,6 +622,159 @@
       "skillFolderHash": "ffaffb88da285473dff526a113f891909e0d638b",
       "installedAt": "2026-03-04T09:17:28.642Z",
       "updatedAt": "2026-03-04T14:15:32.289Z"
+    },
+    "adapt": {
+      "source": "pbakaus/impeccable",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/pbakaus/impeccable.git",
+      "skillPath": ".claude/skills/adapt/SKILL.md",
+      "skillFolderHash": "2c822772ed30b96388d0198639b41f75ee836e68",
+      "installedAt": "2026-03-09T02:29:32.870Z",
+      "updatedAt": "2026-03-09T02:29:32.870Z"
+    },
+    "animate": {
+      "source": "pbakaus/impeccable",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/pbakaus/impeccable.git",
+      "skillPath": ".claude/skills/animate/SKILL.md",
+      "skillFolderHash": "3547b42560cfd4c8d9e7e3ec3a3c6af8ff7eb856",
+      "installedAt": "2026-03-09T02:29:33.354Z",
+      "updatedAt": "2026-03-09T02:29:33.354Z"
+    },
+    "audit": {
+      "source": "pbakaus/impeccable",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/pbakaus/impeccable.git",
+      "skillPath": ".claude/skills/audit/SKILL.md",
+      "skillFolderHash": "50be827d808657817fc8c649590b618b409955ea",
+      "installedAt": "2026-03-09T02:29:33.863Z",
+      "updatedAt": "2026-03-09T02:29:33.863Z"
+    },
+    "bolder": {
+      "source": "pbakaus/impeccable",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/pbakaus/impeccable.git",
+      "skillPath": ".claude/skills/bolder/SKILL.md",
+      "skillFolderHash": "7ed9ab387dfdd013248076dd105ee6f0b14792ec",
+      "installedAt": "2026-03-09T02:29:34.341Z",
+      "updatedAt": "2026-03-09T02:29:34.341Z"
+    },
+    "clarify": {
+      "source": "pbakaus/impeccable",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/pbakaus/impeccable.git",
+      "skillPath": ".claude/skills/clarify/SKILL.md",
+      "skillFolderHash": "7614abc251a4cce3ff8ec438530b95f0a749ddd9",
+      "installedAt": "2026-03-09T02:29:34.888Z",
+      "updatedAt": "2026-03-09T02:29:34.888Z"
+    },
+    "colorize": {
+      "source": "pbakaus/impeccable",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/pbakaus/impeccable.git",
+      "skillPath": ".claude/skills/colorize/SKILL.md",
+      "skillFolderHash": "d1faea839694b3375d6445b2ec15e7e2fb91384c",
+      "installedAt": "2026-03-09T02:29:35.347Z",
+      "updatedAt": "2026-03-09T02:29:35.347Z"
+    },
+    "critique": {
+      "source": "pbakaus/impeccable",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/pbakaus/impeccable.git",
+      "skillPath": ".claude/skills/critique/SKILL.md",
+      "skillFolderHash": "5963d97fb8a16dbf1d197f895791920bda15debd",
+      "installedAt": "2026-03-09T02:29:36.105Z",
+      "updatedAt": "2026-03-09T02:29:36.105Z"
+    },
+    "delight": {
+      "source": "pbakaus/impeccable",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/pbakaus/impeccable.git",
+      "skillPath": ".claude/skills/delight/SKILL.md",
+      "skillFolderHash": "3f2a7adc6423ee3333c1f5e3220a17c02222bf01",
+      "installedAt": "2026-03-09T02:29:36.638Z",
+      "updatedAt": "2026-03-09T02:29:36.638Z"
+    },
+    "distill": {
+      "source": "pbakaus/impeccable",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/pbakaus/impeccable.git",
+      "skillPath": ".claude/skills/distill/SKILL.md",
+      "skillFolderHash": "14fa0cb15391368a80a25664fd613837ad9fffca",
+      "installedAt": "2026-03-09T02:29:37.090Z",
+      "updatedAt": "2026-03-09T02:29:37.090Z"
+    },
+    "extract": {
+      "source": "pbakaus/impeccable",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/pbakaus/impeccable.git",
+      "skillPath": ".claude/skills/extract/SKILL.md",
+      "skillFolderHash": "c1dbec9357af104514eada7d3c952d78eed73ddf",
+      "installedAt": "2026-03-09T02:29:37.647Z",
+      "updatedAt": "2026-03-09T02:29:37.647Z"
+    },
+    "harden": {
+      "source": "pbakaus/impeccable",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/pbakaus/impeccable.git",
+      "skillPath": ".claude/skills/harden/SKILL.md",
+      "skillFolderHash": "da4db9a8d67927f231cee8ec8f132bf329400636",
+      "installedAt": "2026-03-09T02:29:38.673Z",
+      "updatedAt": "2026-03-09T02:29:38.673Z"
+    },
+    "normalize": {
+      "source": "pbakaus/impeccable",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/pbakaus/impeccable.git",
+      "skillPath": ".claude/skills/normalize/SKILL.md",
+      "skillFolderHash": "094ef52816dda05fb269c11e1e761ee98872a402",
+      "installedAt": "2026-03-09T02:29:39.141Z",
+      "updatedAt": "2026-03-09T02:29:39.141Z"
+    },
+    "onboard": {
+      "source": "pbakaus/impeccable",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/pbakaus/impeccable.git",
+      "skillPath": ".claude/skills/onboard/SKILL.md",
+      "skillFolderHash": "38c232ca4c4cf05f34a91b2b5e733746651a7c7e",
+      "installedAt": "2026-03-09T02:29:40.192Z",
+      "updatedAt": "2026-03-09T02:29:40.192Z"
+    },
+    "optimize": {
+      "source": "pbakaus/impeccable",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/pbakaus/impeccable.git",
+      "skillPath": ".claude/skills/optimize/SKILL.md",
+      "skillFolderHash": "43c980b861eb296725b09c9cbc9cc3101b257216",
+      "installedAt": "2026-03-09T02:29:40.723Z",
+      "updatedAt": "2026-03-09T02:29:40.723Z"
+    },
+    "polish": {
+      "source": "pbakaus/impeccable",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/pbakaus/impeccable.git",
+      "skillPath": ".claude/skills/polish/SKILL.md",
+      "skillFolderHash": "2c566f72fe31eb66ee2a08ea34dc20262ab7f11f",
+      "installedAt": "2026-03-09T02:29:41.230Z",
+      "updatedAt": "2026-03-09T02:29:41.230Z"
+    },
+    "quieter": {
+      "source": "pbakaus/impeccable",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/pbakaus/impeccable.git",
+      "skillPath": ".claude/skills/quieter/SKILL.md",
+      "skillFolderHash": "9f8fd9d233460e77171c7fad08c8cb46041c1a62",
+      "installedAt": "2026-03-09T02:29:41.743Z",
+      "updatedAt": "2026-03-09T02:29:41.743Z"
+    },
+    "teach-impeccable": {
+      "source": "pbakaus/impeccable",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/pbakaus/impeccable.git",
+      "skillPath": ".claude/skills/teach-impeccable/SKILL.md",
+      "skillFolderHash": "c8f7b87dca283841efbbb8769e67ca0512474c42",
+      "installedAt": "2026-03-09T02:29:42.215Z",
+      "updatedAt": "2026-03-09T02:29:42.215Z"
     }
   },
   "dismissed": {
@@ -636,6 +788,10 @@
     "gemini-cli",
     "github-copilot",
     "kimi-cli",
-    "opencode"
+    "opencode",
+    "antigravity",
+    "claude-code",
+    "pi",
+    "trae"
   ]
 }
