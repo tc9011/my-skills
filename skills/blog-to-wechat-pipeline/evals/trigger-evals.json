@@ -1,0 +1,78 @@
+[
+  {
+    "query": "把这篇文章 https://www.anthropic.com/research/AI-assistance-coding-skills 翻译成中文，放进 /Users/tangcheng/Documents/Projects/blog，图片也一起处理好。然后再帮我排成微信公众号格式，最后给它做一张封面图。",
+    "should_trigger": true
+  },
+  {
+    "query": "我有个英文技术博客想发公众号，帮我整套处理：先翻成中文放进 blog，再排成公众号可粘贴格式，再配一张封面。",
+    "should_trigger": true
+  },
+  {
+    "query": "把这个链接做成一套公众号发布素材：https://example.com/ai-agent-post。我要中文译文进 blog、公众号排版，还有配图封面，整套给我。",
+    "should_trigger": true
+  },
+  {
+    "query": "我 blog 里这篇译文已经写好了，路径是 /Users/tangcheng/Documents/Projects/blog/src/content/posts/2026/【译】AI 助手如何影响编程技能的形成.md。帮我转成微信公众号格式，再给它配一个封面，封面如果有大标题再去掉。",
+    "should_trigger": true
+  },
+  {
+    "query": "这篇外文文章我想同时发博客和公众号：请翻译、落到我的 blog、处理文中图片，然后排成 wechat-md 可直接发的版本，再做封面图。",
+    "should_trigger": true
+  },
+  {
+    "query": "帮我把一篇英文 AI 文章做成公众号成套素材，包含中文译文、blog 入库、公众号排版和封面图。",
+    "should_trigger": true
+  },
+  {
+    "query": "把这篇博客改成适合公众号发布的一整套内容，正文我想要能直接粘贴到微信后台，另外再做张封面图。文章已经在我的 blog 项目里了。",
+    "should_trigger": true
+  },
+  {
+    "query": "我不想分步骤了，你直接把这篇文章从翻译到 blog、再到微信公众号格式、再到封面图一次性跑完。",
+    "should_trigger": true
+  },
+  {
+    "query": "帮我把这篇英文文章翻译成中文就行，不用排公众号，也不用做封面。",
+    "should_trigger": false
+  },
+  {
+    "query": "把 /Users/tangcheng/Documents/Projects/blog/src/content/posts/2026/【译】AI 助手如何影响编程技能的形成.md 用 wechat-md 排版一下，复制到剪贴板。",
+    "should_trigger": false
+  },
+  {
+    "query": "用 baoyu-cover-image 给我这篇文章单独生成一张封面图，不要动正文。",
+    "should_trigger": false
+  },
+  {
+    "query": "这篇 blog 文章里图片路径不对，帮我修一下 markdown 里的相对路径。",
+    "should_trigger": false
+  },
+  {
+    "query": "我想写一篇原创公众号文章，主题是 AI 如何改变前端开发，你先帮我列提纲。",
+    "should_trigger": false
+  },
+  {
+    "query": "帮我把这篇文章总结成 10 条适合朋友圈发的短句，不需要 blog，也不是公众号正文。",
+    "should_trigger": false
+  },
+  {
+    "query": "我已经有公众号排版好的 HTML 了，只想再裁一版 1:1 的封面图发社交媒体。",
+    "should_trigger": false
+  },
+  {
+    "query": "把这个 PDF 翻译成中文 Word 文档，保留目录和页码。",
+    "should_trigger": false
+  },
+  {
+    "query": "把这篇文章做成公众号封面和朋友圈配图两张图就行，正文我自己处理。",
+    "should_trigger": false
+  },
+  {
+    "query": "我已经把中文译文发你了，你只需要帮我检查错别字和语气，不用管 blog、公众号排版或封面。",
+    "should_trigger": false
+  },
+  {
+    "query": "把这个链接读一下，然后帮我输出一个公众号标题清单和摘要，不要落 blog，也不要排版正文。",
+    "should_trigger": false
+  }
+]

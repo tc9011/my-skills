@@ -1,0 +1,23 @@
+{
+  "skill_name": "blog-to-wechat-pipeline",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "把这篇文章 https://www.anthropic.com/research/AI-assistance-coding-skills 翻译成中文，放进 /Users/tangcheng/Documents/Projects/blog，图片也一起处理好。然后再帮我排成微信公众号格式，最后给它做一张封面图。",
+      "expected_output": "Should treat this as an end-to-end pipeline request, not a single translation-only task. It should save a blog post into the blog project, verify local image paths, run WeChat formatting via wechat-md skill flow, and generate a cover image or clearly report any credential/quota blocker.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "我 blog 里有篇译文已经写好了，在 /Users/tangcheng/Documents/Projects/blog/src/content/posts/2026/【译】AI 助手如何影响编程技能的形成.md。帮我把它转成公众号可直接粘贴的格式，再生成一个封面图，如果封面上标题太大就顺手去掉。",
+      "expected_output": "Should recognize this as a multi-step WeChat publishing package request using an existing article: use the local wechat-md skill flow, generate a cover image, and optionally produce a no-title variant. It should not insist on re-translating the article.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "把这个链接做成一套公众号发布素材：https://example.com/ai-agent-post。我要中文译文进 blog、公众号排版，还有配图封面，整套给我。",
+      "expected_output": "Should trigger the pipeline skill from colloquial wording like '一套公众号发布素材' and interpret it as translation + blog saving + WeChat formatting + cover generation. It should gather missing details only where necessary, but keep the workflow bundled rather than splitting it into isolated tasks.",
+      "files": []
+    }
+  ]
+}
