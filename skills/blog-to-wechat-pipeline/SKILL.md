@@ -96,7 +96,7 @@ When translation is requested:
 
 ## Step 2: Format for WeChat with `wechat-md`
 
-If the user asks for 公众号 formatting, use the **local `wechat-md` skill flow**.
+Use the **local `wechat-md` skill flow**.
 
 ### Workflow
 1. Read the final markdown article
@@ -116,7 +116,7 @@ If the user asks for 公众号 formatting, use the **local `wechat-md` skill flo
 
 ## Step 3: Generate the cover image
 
-If the user asks for a cover image, use `baoyu-cover-image` conventions.
+Use `baoyu-cover-image` conventions.
 
 ### Default behavior for technical translated articles
 Unless the user specifies otherwise, a good starting point is:

@@ -1,9 +1,0 @@
-{
-  "skill_creator_source": "/Users/tangcheng/.agents/skills/skill-creator/SKILL.md",
-  "last_skill_creator_fingerprint": "dcd4803e61e913e6fc27294184cd3a71f09f5e924ff20c8a9a20173e7b3c2bcf",
-  "last_sync_at": "2026-03-14T15:39:00+08:00",
-  "last_sync_reason": "initial",
-  "last_target_skill": "/Users/tangcheng/.agents/skills/blog-to-wechat-pipeline",
-  "last_automation_status": "partial",
-  "notes": "Initialized maintainer fingerprint, then used manual fallback to tighten blog-to-wechat-pipeline description after claude -p trigger automation stalled."
-}
