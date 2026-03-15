@@ -159,6 +159,7 @@ if (Test-Path "$HOME/.baoyu-skills/baoyu-cover-image/EXTEND.md") { "user" }
 2. **Save source content** (if pasted, save to `source.md`)
 3. **Analyze content**: topic, tone, keywords, visual metaphors
 4. **Deep analyze references** ⚠️: Extract specific, concrete elements (see reference-images.md)
+   - If references contain **people** → set `usage: direct` so model sees reference image, describe character features for stylized preservation (see reference-images.md § Character Analysis)
 5. **Detect language**: Compare source, user input, EXTEND.md preference
 6. **Determine output directory**: Per File Structure rules
 

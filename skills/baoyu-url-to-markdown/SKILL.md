@@ -1,7 +1,7 @@
 ---
 name: baoyu-url-to-markdown
-description: Fetch any URL and convert to markdown using Chrome CDP. Saves the rendered HTML snapshot alongside the markdown, and automatically falls back to the pre-Defuddle HTML-to-Markdown pipeline when Defuddle fails. Supports two modes - auto-capture on page load, or wait for user signal (for pages requiring login). Use when user wants to save a webpage as markdown.
-version: 1.56.1
+description: Fetch any URL and convert to markdown using Chrome CDP. Saves the rendered HTML snapshot alongside the markdown, uses an upgraded Defuddle pipeline with better web-component handling and YouTube transcript extraction, and automatically falls back to the pre-Defuddle HTML-to-Markdown pipeline when needed. If local browser capture fails entirely, it can fall back to the hosted defuddle.md API. Supports two modes - auto-capture on page load, or wait for user signal (for pages requiring login). Use when user wants to save a webpage as markdown.
+version: 1.58.1
 metadata:
   openclaw:
     homepage: https://github.com/JimLiu/baoyu-skills#baoyu-url-to-markdown
@@ -29,7 +29,10 @@ Fetches any URL via Chrome CDP, saves the rendered HTML snapshot, and converts i
 | Script | Purpose |
 |--------|---------|
 | `scripts/main.ts` | CLI entry point for URL fetching |
-| `scripts/html-to-markdown.ts` | Defuddle-first conversion with automatic legacy fallback |
+| `scripts/html-to-markdown.ts` | Markdown conversion entry point and converter selection |
+| `scripts/defuddle-converter.ts` | Defuddle-based conversion |
+| `scripts/legacy-converter.ts` | Pre-Defuddle legacy extraction and markdown conversion |
+| `scripts/markdown-conversion-shared.ts` | Shared metadata parsing and markdown document helpers |
 
 ## Preferences (EXTEND.md)
 
@@ -115,7 +118,10 @@ Full reference: [references/config/first-time-setup.md](references/config/first-
 - Two capture modes: auto or wait-for-user
 - Save rendered HTML as a sibling `-captured.html` file
 - Clean markdown output with metadata
-- Defuddle-first markdown conversion with automatic fallback to the pre-Defuddle extractor from git history
+- Upgraded Defuddle-first markdown conversion with automatic fallback to the pre-Defuddle extractor from git history
+- Materializes shadow DOM content before conversion so web-component pages survive serialization better
+- YouTube pages can include transcript/caption text in the markdown when YouTube exposes a caption track
+- If local browser capture fails completely, can fall back to `defuddle.md/<url>` and still save markdown
 - Handles login-required pages via wait mode
 - Download images and videos to local directories
 
@@ -168,7 +174,10 @@ Each run saves two files side by side:
 - Markdown: YAML front matter with `url`, `title`, `description`, `author`, `published`, optional `coverImage`, and `captured_at`, followed by converted markdown content
 - HTML snapshot: `*-captured.html`, containing the rendered page HTML captured from Chrome
 
+When Defuddle or page metadata provides a language hint, the markdown front matter also includes `language`.
+
 The HTML snapshot is saved before any markdown media localization, so it stays a faithful capture of the page DOM used for conversion.
+If the hosted `defuddle.md` API fallback is used, markdown is still saved, but there is no local `-captured.html` snapshot for that run.
 
 ## Output Directory
 
@@ -193,13 +202,16 @@ When `--download-media` is enabled:
 Conversion order:
 
 1. Try Defuddle first
-2. If Defuddle throws, cannot load, returns obviously incomplete markdown, or captures lower-quality content than the legacy pipeline, automatically fall back to the pre-Defuddle extractor
-3. The fallback path uses the older Readability/selector/Next.js-data based HTML-to-Markdown implementation recovered from git history
+2. For rich pages such as YouTube, prefer Defuddle's extractor-specific output (including transcripts when available) instead of replacing it with the legacy pipeline
+3. If Defuddle throws, cannot load, returns obviously incomplete markdown, or captures lower-quality content than the legacy pipeline, automatically fall back to the pre-Defuddle extractor
+4. If the entire local browser capture flow fails before markdown can be produced, try the hosted `https://defuddle.md/<url>` API and save its markdown output directly
+5. The legacy fallback path uses the older Readability/selector/Next.js-data based HTML-to-Markdown implementation recovered from git history
 
 CLI output will show:
 
 - `Converter: defuddle` when Defuddle succeeds
 - `Converter: legacy:...` plus `Fallback used: ...` when fallback was needed
+- `Converter: defuddle-api` when local browser capture failed and the hosted API was used instead
 
 ## Media Download Workflow
 
@@ -231,6 +243,18 @@ Based on `download_media` setting in EXTEND.md:
 | `URL_CHROME_PROFILE_DIR` | Custom Chrome profile directory |
 
 **Troubleshooting**: Chrome not found → set `URL_CHROME_PATH`. Timeout → increase `--timeout`. Complex pages → try `--wait` mode. If markdown quality is poor, inspect the saved `-captured.html` and check whether the run logged a legacy fallback.
+
+### YouTube Notes
+
+- The upgraded Defuddle path uses async extractors, so YouTube pages can include transcript text directly in the markdown body.
+- Transcript availability depends on YouTube exposing a caption track. Videos with captions disabled, restricted playback, or blocked regional access may still produce description-only output.
+- If the page needs time to finish loading descriptions, chapters, or player metadata, prefer `--wait` and capture after the watch page is fully hydrated.
+
+### Hosted API Fallback
+
+- The hosted fallback endpoint is `https://defuddle.md/<url>`. In shell form: `curl https://defuddle.md/stephango.com`
+- Use it only when the local Chrome/CDP capture path fails outright. The local path still has higher fidelity because it can save the captured HTML and handle authenticated pages.
+- The hosted API already returns Markdown with YAML frontmatter, so save that response as-is and then apply the normal media-localization step if requested.
 
 ## Extension Support
 

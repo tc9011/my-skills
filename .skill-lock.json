@@ -15,27 +15,27 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/vercel-labs/skills.git",
       "skillPath": "skills/find-skills/SKILL.md",
-      "skillFolderHash": "c2f31172b6f256272305a5e6e7228b258446899f",
+      "skillFolderHash": "3013fdeb8a11b10b1eb795ec3ae8bfca38f7c26d",
       "installedAt": "2026-01-28T02:47:12.903Z",
-      "updatedAt": "2026-02-09T08:28:27.583Z"
+      "updatedAt": "2026-03-15T05:19:01.924Z"
     },
     "agent-browser": {
       "source": "vercel-labs/agent-browser",
       "sourceType": "github",
       "sourceUrl": "https://github.com/vercel-labs/agent-browser.git",
       "skillPath": "skills/agent-browser/SKILL.md",
-      "skillFolderHash": "45f9dcf935433abcb49929aef1d1bc3dedf20c79",
+      "skillFolderHash": "9fa6850b305ad7237ffe61fc12f9e3d2d9c3d990",
       "installedAt": "2026-01-28T02:47:36.082Z",
-      "updatedAt": "2026-03-09T12:31:31.757Z"
+      "updatedAt": "2026-03-15T05:19:11.026Z"
     },
     "ui-ux-pro-max": {
       "source": "nextlevelbuilder/ui-ux-pro-max-skill",
       "sourceType": "github",
       "sourceUrl": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill.git",
       "skillPath": ".claude/skills/ui-ux-pro-max/SKILL.md",
-      "skillFolderHash": "986c64ad9b8e196a4a737c01872c2eda790daba1",
+      "skillFolderHash": "75e1acaafe8b08e59d4b86fc253ac7873aff6bba",
       "installedAt": "2026-01-28T02:50:36.207Z",
-      "updatedAt": "2026-02-04T14:15:34.900Z"
+      "updatedAt": "2026-03-15T05:19:20.379Z"
     },
     "threejs-animation": {
       "source": "CloudAI-X/threejs-skills",
@@ -339,10 +339,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/jimliu/baoyu-skills.git",
       "skillPath": "skills/baoyu-cover-image/SKILL.md",
-      "skillFolderHash": "8e92740e14ac703ffc23f130b625a408cff5fde2",
-      "pluginName": "content-skills",
+      "skillFolderHash": "df5f719e417351f324b7c1a608b6d8698dc925df",
       "installedAt": "2026-02-27T07:30:32.869Z",
-      "updatedAt": "2026-03-09T07:38:49.555Z"
+      "updatedAt": "2026-03-15T05:19:29.301Z"
     },
     "code-review-expert": {
       "source": "sanyuan0704/code-review-expert",
@@ -502,9 +501,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
       "skillPath": "skills/react-best-practices/SKILL.md",
-      "skillFolderHash": "fce8b5a24ff4ff2fc5db6aa1051e03b53c6b5bf1",
+      "skillFolderHash": "18a9a6d17d5958d4ab10405883b80960644dbd5b",
       "installedAt": "2026-03-02T13:35:58.815Z",
-      "updatedAt": "2026-03-06T03:40:51.672Z"
+      "updatedAt": "2026-03-15T05:19:36.831Z"
     },
     "vercel-react-native-skills": {
       "source": "vercel-labs/agent-skills",
@@ -583,9 +582,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/vercel-labs/agent-browser.git",
       "skillPath": "skills/electron/SKILL.md",
-      "skillFolderHash": "36a2fb9f35e92feb05cabe8d79638a73f06cc34c",
+      "skillFolderHash": "d0ddd7aa08b229c9f6ab7519a2597a54d1fe2a49",
       "installedAt": "2026-03-02T13:39:47.590Z",
-      "updatedAt": "2026-03-09T12:31:58.432Z"
+      "updatedAt": "2026-03-15T05:19:43.985Z"
     },
     "slack": {
       "source": "vercel-labs/agent-browser",
@@ -781,30 +780,27 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/jimliu/baoyu-skills.git",
       "skillPath": "skills/baoyu-translate/SKILL.md",
-      "skillFolderHash": "d954bff6d965eb7aab24575a41657fabd3473c1f",
-      "pluginName": "utility-skills",
+      "skillFolderHash": "12e148c5ba27fb55424fc5a20df5e951f3b70fcf",
       "installedAt": "2026-03-09T07:38:50.128Z",
-      "updatedAt": "2026-03-09T07:38:50.128Z"
+      "updatedAt": "2026-03-15T05:19:54.394Z"
     },
     "baoyu-url-to-markdown": {
       "source": "jimliu/baoyu-skills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/jimliu/baoyu-skills.git",
       "skillPath": "skills/baoyu-url-to-markdown/SKILL.md",
-      "skillFolderHash": "c12816f4951ae4fe6e25db3af95648a167871f61",
-      "pluginName": "utility-skills",
+      "skillFolderHash": "e94ed2d7150d79b397b7449f4542027bbdc6f4c5",
       "installedAt": "2026-03-09T07:38:50.632Z",
-      "updatedAt": "2026-03-09T07:38:50.632Z"
+      "updatedAt": "2026-03-15T05:20:08.911Z"
     },
     "baoyu-article-illustrator": {
       "source": "jimliu/baoyu-skills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/jimliu/baoyu-skills.git",
       "skillPath": "skills/baoyu-article-illustrator/SKILL.md",
-      "skillFolderHash": "83fa5a0245dc9932d2ab8f8ffe6dcbfe7b03fdd7",
-      "pluginName": "content-skills",
+      "skillFolderHash": "51ccd8a94cd506ae1bb42ff2619a8c4746aa8040",
       "installedAt": "2026-03-09T07:38:51.119Z",
-      "updatedAt": "2026-03-09T07:38:51.119Z"
+      "updatedAt": "2026-03-15T05:20:25.237Z"
     },
     "documentation-writer": {
       "source": "github/awesome-copilot",

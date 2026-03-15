@@ -3,7 +3,7 @@ import { writeFile, mkdir, access } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 
-import { CdpConnection, getFreePort, launchChrome, waitForChromeDebugPort, waitForNetworkIdle, waitForPageLoad, autoScroll, evaluateScript, killChrome } from "./cdp.js";
+import { CdpConnection, getFreePort, findExistingChromePort, launchChrome, waitForChromeDebugPort, waitForNetworkIdle, waitForPageLoad, autoScroll, evaluateScript, killChrome } from "./cdp.js";
 import { absolutizeUrlsScript, extractContent, createMarkdownDocument, type ConversionResult } from "./html-to-markdown.js";
 import { localizeMarkdownMedia, countRemoteMedia } from "./media-localizer.js";
 import { resolveUrlToMarkdownDataDir } from "./paths.js";
@@ -75,6 +75,55 @@ function deriveHtmlSnapshotPath(markdownPath: string): string {
   return path.join(parsed.dir, `${basename}-captured.html`);
 }
 
+function extractTitleFromMarkdownDocument(document: string): string {
+  const normalized = document.replace(/\r\n/g, "\n");
+  const frontmatterMatch = normalized.match(/^---\n([\s\S]*?)\n---\n?/);
+  if (frontmatterMatch) {
+    const titleLine = frontmatterMatch[1]
+      .split("\n")
+      .find((line) => /^title:\s*/i.test(line));
+
+    if (titleLine) {
+      const rawValue = titleLine.replace(/^title:\s*/i, "").trim();
+      const unquoted = rawValue
+        .replace(/^"(.*)"$/, "$1")
+        .replace(/^'(.*)'$/, "$1")
+        .replace(/\\"/g, '"');
+      if (unquoted) return unquoted;
+    }
+  }
+
+  const headingMatch = normalized.match(/^#\s+(.+)$/m);
+  return headingMatch?.[1]?.trim() ?? "";
+}
+
+function buildDefuddleApiUrl(targetUrl: string): string {
+  return `https://defuddle.md/${encodeURIComponent(targetUrl)}`;
+}
+
+async function fetchDefuddleApiMarkdown(targetUrl: string): Promise<{ markdown: string; title: string }> {
+  const apiUrl = buildDefuddleApiUrl(targetUrl);
+  const response = await fetch(apiUrl, {
+    headers: {
+      accept: "text/markdown,text/plain;q=0.9,*/*;q=0.1",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`defuddle.md returned ${response.status} ${response.statusText}`);
+  }
+
+  const markdown = (await response.text()).replace(/\r\n/g, "\n").trim();
+  if (!markdown) {
+    throw new Error("defuddle.md returned empty markdown");
+  }
+
+  return {
+    markdown,
+    title: extractTitleFromMarkdownDocument(markdown),
+  };
+}
+
 async function generateOutputPath(url: string, title: string, outputDir?: string): Promise<string> {
   const domain = new URL(url).hostname.replace(/^www\./, "");
   const slug = generateSlug(title, url);
@@ -98,21 +147,37 @@ async function waitForUserSignal(): Promise<void> {
 }
 
 async function captureUrl(args: Args): Promise<ConversionResult> {
-  const port = await getFreePort();
-  const chrome = await launchChrome(args.url, port, false);
+  const existingPort = await findExistingChromePort();
+  const reusing = existingPort !== null;
+  const port = existingPort ?? await getFreePort();
+  const chrome = reusing ? null : await launchChrome(args.url, port, false);
+
+  if (reusing) console.log(`Reusing existing Chrome on port ${port}`);
 
   let cdp: CdpConnection | null = null;
+  let targetId: string | null = null;
   try {
     const wsUrl = await waitForChromeDebugPort(port, 30_000);
     cdp = await CdpConnection.connect(wsUrl, CDP_CONNECT_TIMEOUT_MS);
 
-    const targets = await cdp.send<{ targetInfos: Array<{ targetId: string; type: string; url: string }> }>("Target.getTargets");
-    const pageTarget = targets.targetInfos.find(t => t.type === "page" && t.url.startsWith("http"));
-    if (!pageTarget) throw new Error("No page target found");
-
-    const { sessionId } = await cdp.send<{ sessionId: string }>("Target.attachToTarget", { targetId: pageTarget.targetId, flatten: true });
-    await cdp.send("Network.enable", {}, { sessionId });
-    await cdp.send("Page.enable", {}, { sessionId });
+    let sessionId: string;
+    if (reusing) {
+      const created = await cdp.send<{ targetId: string }>("Target.createTarget", { url: args.url });
+      targetId = created.targetId;
+      const attached = await cdp.send<{ sessionId: string }>("Target.attachToTarget", { targetId, flatten: true });
+      sessionId = attached.sessionId;
+      await cdp.send("Network.enable", {}, { sessionId });
+      await cdp.send("Page.enable", {}, { sessionId });
+    } else {
+      const targets = await cdp.send<{ targetInfos: Array<{ targetId: string; type: string; url: string }> }>("Target.getTargets");
+      const pageTarget = targets.targetInfos.find(t => t.type === "page" && t.url.startsWith("http"));
+      if (!pageTarget) throw new Error("No page target found");
+      targetId = pageTarget.targetId;
+      const attached = await cdp.send<{ sessionId: string }>("Target.attachToTarget", { targetId, flatten: true });
+      sessionId = attached.sessionId;
+      await cdp.send("Network.enable", {}, { sessionId });
+      await cdp.send("Page.enable", {}, { sessionId });
+    }
 
     if (args.wait) {
       await waitForUserSignal();
@@ -136,11 +201,18 @@ async function captureUrl(args: Args): Promise<ConversionResult> {
 
     return await extractContent(html, args.url);
   } finally {
-    if (cdp) {
-      try { await cdp.send("Browser.close", {}, { timeoutMs: 5_000 }); } catch {}
-      cdp.close();
+    if (reusing) {
+      if (cdp && targetId) {
+        try { await cdp.send("Target.closeTarget", { targetId }, { timeoutMs: 5_000 }); } catch {}
+      }
+      if (cdp) cdp.close();
+    } else {
+      if (cdp) {
+        try { await cdp.send("Browser.close", {}, { timeoutMs: 5_000 }); } catch {}
+        cdp.close();
+      }
+      if (chrome) killChrome(chrome);
     }
-    killChrome(chrome);
   }
 }
 
@@ -169,14 +241,41 @@ async function main(): Promise<void> {
   console.log(`Fetching: ${args.url}`);
   console.log(`Mode: ${args.wait ? "wait" : "auto"}`);
 
-  const result = await captureUrl(args);
-  const outputPath = args.output || await generateOutputPath(args.url, result.metadata.title, args.outputDir);
-  const outputDir = path.dirname(outputPath);
-  const htmlSnapshotPath = deriveHtmlSnapshotPath(outputPath);
-  await mkdir(outputDir, { recursive: true });
-  await writeFile(htmlSnapshotPath, result.rawHtml, "utf-8");
+  let outputPath: string;
+  let htmlSnapshotPath: string | null = null;
+  let document: string;
+  let conversionMethod: string;
+  let fallbackReason: string | undefined;
 
-  let document = createMarkdownDocument(result);
+  try {
+    const result = await captureUrl(args);
+    outputPath = args.output || await generateOutputPath(args.url, result.metadata.title, args.outputDir);
+    const outputDir = path.dirname(outputPath);
+    htmlSnapshotPath = deriveHtmlSnapshotPath(outputPath);
+    await mkdir(outputDir, { recursive: true });
+    await writeFile(htmlSnapshotPath, result.rawHtml, "utf-8");
+
+    document = createMarkdownDocument(result);
+    conversionMethod = result.conversionMethod;
+    fallbackReason = result.fallbackReason;
+  } catch (error) {
+    const primaryError = error instanceof Error ? error.message : String(error);
+    console.warn(`Primary capture failed: ${primaryError}`);
+    console.warn("Trying defuddle.md API fallback...");
+
+    try {
+      const remoteResult = await fetchDefuddleApiMarkdown(args.url);
+      outputPath = args.output || await generateOutputPath(args.url, remoteResult.title, args.outputDir);
+      await mkdir(path.dirname(outputPath), { recursive: true });
+
+      document = remoteResult.markdown;
+      conversionMethod = "defuddle-api";
+      fallbackReason = `Local browser capture failed: ${primaryError}`;
+    } catch (remoteError) {
+      const remoteMessage = remoteError instanceof Error ? remoteError.message : String(remoteError);
+      throw new Error(`Local browser capture failed (${primaryError}); defuddle.md fallback failed (${remoteMessage})`);
+    }
+  }
 
   if (args.downloadMedia) {
     const mediaResult = await localizeMarkdownMedia(document, {
@@ -197,11 +296,15 @@ async function main(): Promise<void> {
   await writeFile(outputPath, document, "utf-8");
 
   console.log(`Saved: ${outputPath}`);
-  console.log(`Saved HTML: ${htmlSnapshotPath}`);
-  console.log(`Title: ${result.metadata.title || "(no title)"}`);
-  console.log(`Converter: ${result.conversionMethod}`);
-  if (result.fallbackReason) {
-    console.warn(`Fallback used: ${result.fallbackReason}`);
+  if (htmlSnapshotPath) {
+    console.log(`Saved HTML: ${htmlSnapshotPath}`);
+  } else {
+    console.log("Saved HTML: unavailable (defuddle.md fallback)");
+  }
+  console.log(`Title: ${extractTitleFromMarkdownDocument(document) || "(no title)"}`);
+  console.log(`Converter: ${conversionMethod}`);
+  if (fallbackReason) {
+    console.warn(`Fallback used: ${fallbackReason}`);
   }
 }
 
