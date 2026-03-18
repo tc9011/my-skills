@@ -159,13 +159,24 @@ if (Test-Path "$HOME/.baoyu-skills/baoyu-cover-image/EXTEND.md") { "user" }
 2. **Save source content** (if pasted, save to `source.md`)
 3. **Analyze content**: topic, tone, keywords, visual metaphors
 4. **Deep analyze references** ⚠️: Extract specific, concrete elements (see reference-images.md)
-   - If references contain **people** → set `usage: direct` so model sees reference image, describe character features for stylized preservation (see reference-images.md § Character Analysis)
 5. **Detect language**: Compare source, user input, EXTEND.md preference
 6. **Determine output directory**: Per File Structure rules
 
+**⚠️ People in Reference Images — MUST follow all 3 rules:**
+
+If reference images contain **people** who should appear in the cover:
+
+1. **`usage: direct`** — MUST set in refs description file. NEVER use `style` or `palette` when people need to appear
+2. **Per-character description** — MUST describe each person's distinctive features (hair, glasses, skin tone, clothing) in `refs/ref-NN-{slug}.md`. Vague descriptions like "a man" will fail
+3. **`--ref` flag** — MUST pass reference image via `--ref` in Step 4 so the model sees actual faces
+
+See [reference-images.md § Character Analysis](references/workflow/reference-images.md) for description format.
+
 ### Step 2: Confirm Options ⚠️
 
-Full confirmation flow: [references/workflow/confirm-options.md](references/workflow/confirm-options.md)
+**MUST use `AskUserQuestion` tool** to present options as interactive selection — NOT plain text tables. Present up to 4 questions in a single `AskUserQuestion` call (Type, Palette, Rendering, Font + Settings). Each question shows the recommended option first with reason, followed by alternatives.
+
+Full confirmation flow and question format: [references/workflow/confirm-options.md](references/workflow/confirm-options.md)
 
 | Condition | Skipped | Still Asked |
 |-----------|---------|-------------|
