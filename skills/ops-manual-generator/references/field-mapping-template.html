@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>[功能名称] - 字段对照图</title>
+    <style>
+      /* 全局样式 */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+        background: #f5f5f5;
+      }
+
+      /* 顶部标题栏 */
+      .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+      }
+
+      /* 每组对照区域 */
+      .mapping-group {
+        margin: 30px auto;
+        max-width: 1400px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+      }
+      .group-title {
+        padding: 20px 30px;
+        background: #f8f9fa;
+        border-bottom: 1px solid #eee;
+        font-size: 20px;
+        font-weight: 600;
+      }
+
+      /* 左右对照布局 */
+      .comparison {
+        display: flex;
+        gap: 30px;
+        padding: 30px;
+      }
+      .side {
+        flex: 1;
+        position: relative;
+      }
+      .side-label {
+        font-weight: 600;
+        margin-bottom: 12px;
+        color: #666;
+      }
+      .side img {
+        width: 100%;
+        border: 1px solid #eee;
+        border-radius: 8px;
+      }
+
+      /* 编号标记 — 绝对定位在截图上 */
+      .marker {
+        position: absolute;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: bold;
+        color: white;
+        cursor: pointer;
+        z-index: 10;
+        transition: transform 0.2s;
+      }
+      .marker:hover {
+        transform: scale(1.3);
+      }
+      .marker.backend {
+        background: #e74c3c;
+      } /* 红色 = 后台 */
+      .marker.frontend {
+        background: #3498db;
+      } /* 蓝色 = 前端 */
+
+      /* 图例/说明表格 */
+      .legend {
+        margin-top: 20px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+      }
+      .legend table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .legend th {
+        background: #eee;
+        padding: 10px;
+        text-align: left;
+      }
+      .legend td {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+      }
+
+      /* 打印 / PDF 优化 */
+      @media print {
+        .mapping-group {
+          break-inside: avoid;
+          box-shadow: none;
+        }
+        body {
+          background: white;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>[功能名称] - 字段对照图</h1>
+      <p>后台配置字段 ↔ 前端展示位置</p>
+    </div>
+
+    <!-- 每个配置模块一个 mapping-group -->
+    <div class="mapping-group">
+      <div class="group-title">配置模块名称</div>
+      <div class="comparison">
+        <div class="side" style="position: relative">
+          <div class="side-label">🔧 后台配置</div>
+          <img src="images/backend-screenshot.png" alt="后台截图" />
+          <!-- 标记用百分比定位，适应不同屏幕 -->
+          <div class="marker backend" style="top: 25%; left: 60%">1</div>
+          <div class="marker backend" style="top: 40%; left: 60%">2</div>
+        </div>
+        <div class="side" style="position: relative">
+          <div class="side-label">📱 前端展示</div>
+          <img src="images/frontend-screenshot.png" alt="前端截图" />
+          <div class="marker frontend" style="top: 15%; left: 50%">1</div>
+          <div class="marker frontend" style="top: 35%; left: 50%">2</div>
+        </div>
+      </div>
+      <div class="legend">
+        <table>
+          <tr>
+            <th>编号</th>
+            <th>后台字段</th>
+            <th>前端位置</th>
+            <th>说明</th>
+          </tr>
+          <tr>
+            <td>①</td>
+            <td>字段名</td>
+            <td>展示位置</td>
+            <td>补充说明</td>
+          </tr>
+          <tr>
+            <td>②</td>
+            <td>字段名</td>
+            <td>展示位置</td>
+            <td>补充说明</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- 重复更多 mapping-group... -->
+  </body>
+</html>

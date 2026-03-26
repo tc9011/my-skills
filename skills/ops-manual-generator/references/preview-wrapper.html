@@ -1,0 +1,70 @@
+<!--
+  操作手册 Markdown 预览包装器
+  用法：将 Markdown 转为 HTML 后插入 <div id="content"> 中，
+  或直接用 marked 等工具输出的 HTML 替换注释占位符。
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>操作手册预览</title>
+    <style>
+      body {
+        font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 40px;
+        font-size: 14px;
+        line-height: 1.8;
+        color: #333;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 16px 0;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px 12px;
+        text-align: left;
+      }
+      th {
+        background: #f5f5f5;
+      }
+      h1 {
+        border-bottom: 2px solid #333;
+        padding-bottom: 10px;
+      }
+      h2 {
+        margin-top: 2em;
+        color: #2c3e50;
+      }
+      code {
+        background: #f5f5f5;
+        padding: 2px 6px;
+        border-radius: 3px;
+      }
+      img {
+        max-width: 100%;
+        border-radius: 4px;
+      }
+      .preview-banner {
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        padding: 12px 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="preview-banner">
+      ⚡ 预览模式 — 确认内容无误后输入 <strong>approve</strong> 生成最终 PPT
+    </div>
+    <div id="content">
+      <!-- marked 转换的 HTML 内容插入这里 -->
+    </div>
+  </body>
+</html>
