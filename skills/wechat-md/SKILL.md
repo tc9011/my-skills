@@ -1,79 +1,68 @@
 ---
 name: wechat-md
-description: Format Markdown articles into WeChat-compatible content using md-wechat.vercel.app via Chrome DevTools MCP or equivalent browser automation. Use whenever the user wants a blog post, local markdown file, or article turned into 微信公众号-ready content, copied to the clipboard, or formatted for WeChat publishing. Prefer this skill over ad-hoc browser poking when the task is “公众号排版 / wechat-md / copy to WeChat / 微信公众号格式化”.
+description: "Format Markdown articles into WeChat-compatible content using md-wechat.vercel.app via browser automation, then copy the rendered result to the clipboard for pasting into the WeChat public-account editor. Use this skill whenever the user mentions 公众号排版, wechat-md, 微信公众号格式, WeChat formatting, copying to WeChat, or wants any markdown/blog post turned into 微信公众号-ready content. Also triggers on phrases like '排成公众号格式', '复制到公众号', '转微信格式'. Prefer this skill over ad-hoc browser poking — it handles style presets, content injection, and clipboard copying in a reliable automated sequence."
 ---
 
 # WeChat Markdown Formatter
 
 把 Markdown 变成可直接粘贴到微信公众号后台的排版内容。
 
-## What this skill should optimize for
+## Design goals
 
-1. **稳定把结果复制到剪贴板**，而不是只把文章显示在网页里
-2. **少用超长字符串 / 超长脚本直接注入**，避免转义、序列化、长度限制问题
-3. **优先使用 Chrome DevTools MCP 或等价浏览器自动化能力**
-4. **对本地相对图片容错**：编辑器里图片加载失败通常不影响最终粘贴结果
+1. **Clipboard is the deliverable** — the job isn't done until rendered content is in the clipboard, not just displayed in the editor
+2. **Avoid giant inline payloads** — serving content via local HTTP and letting the page fetch it is far more reliable than escaping a 10K+ string into an evaluate call
+3. **Browser automation agnostic** — the workflow uses standard primitives (navigate, evaluate JS, click, snapshot) that work across different automation runtimes
+4. **Tolerant of broken images** — blog articles with relative local image paths will show broken images in the preview, but this never affects the clipboard output
 
 ## Runtime assumption
 
-This skill is written for environments that can automate a browser tab through **Chrome DevTools MCP** or an equivalent browser-control layer.
+This skill requires browser automation capabilities. The exact tool names differ by runtime, but the workflow needs equivalents for:
 
-The exact tool names may differ by runtime, but the workflow assumes you have equivalents for:
-- open / navigate a page
-- evaluate JavaScript in the page
-- inspect the page state / snapshot
-- click a button
+- **Navigate**: open or reload a URL in a browser tab
+- **Evaluate JS**: execute JavaScript in the page context and get a return value
+- **Click**: click a DOM element (by ref, selector, or role)
+- **Snapshot**: inspect the current page state (DOM tree / accessibility tree)
 
-Do **not** depend on Playwright-specific APIs or syntax in the skill text unless the runtime explicitly requires them.
+Examples:
+- OpenClaw: `browser(action=navigate)`, `browser(action=act, kind=evaluate)`, `browser(action=act, kind=click)`, `browser(action=snapshot)`
+- Chrome DevTools MCP: `navigate`, `evaluate`, `click`, `snapshot`
+- Playwright: `page.goto()`, `page.evaluate()`, `page.click()`, etc.
+
+**Tab consistency**: keep the same tab/target across all calls within one session.
 
 ## Preferred workflow
 
 ### Step 1: Prepare a clean markdown file
 
-Use the helper script to strip YAML frontmatter and `<!--more-->`, then write a clean temp file:
+Strip YAML frontmatter and `<!--more-->` tags, then write a clean temp file:
 
 ```bash
 node <skill-dir>/scripts/prepare-markdown.js <markdown-file> --strip-frontmatter
 ```
 
-Default output:
+Default output: `/tmp/wechat-md-input.md`
 
-```text
-/tmp/wechat-md-input.md
-```
-
-If the user explicitly wants to keep frontmatter-related content, skip `--strip-frontmatter`.
+Skip `--strip-frontmatter` only if the user explicitly wants frontmatter-related content kept.
 
 ### Step 2: Start a temporary local HTTP server
 
-Do **not** default to embedding the entire markdown body directly into a giant evaluate call.
-
-Instead, serve the prepared file from its directory with:
+Serving the file locally avoids the most fragile part of this workflow: injecting a huge escaped string directly into a page evaluation. Instead, the page fetches the content over HTTP.
 
 ```bash
-python3 <skill-dir>/scripts/temp-http.py <directory-containing-the-prepared-file>
+python3 <skill-dir>/scripts/temp-http.py /tmp
 ```
 
-Important behavior:
-- binds to `127.0.0.1`
-- uses a **random free port** by default, so it avoids port-collision failures
-- prints one line like:
+Run this in **background** mode. It prints:
 
 ```text
-SERVER_URL=http://127.0.0.1:54321
+SERVER_URL=http://127.0.0.1:<port>
 ```
 
-Capture that URL from process output.
+Capture that URL from process output before proceeding.
 
 ### Step 3: Open md-wechat and apply the style preset
 
-Open:
-
-```text
-https://md-wechat.vercel.app/
-```
-
-Then run one JS evaluation to set localStorage style values:
+Navigate to `https://md-wechat.vercel.app/`, then evaluate this JS to set localStorage style values:
 
 ```js
 (() => {
@@ -91,123 +80,111 @@ Then run one JS evaluation to set localStorage style values:
 })()
 ```
 
-Then reload / re-navigate to the same page so the preset is applied.
+Then **reload** (re-navigate to the same URL) so the preset takes effect.
 
-### Step 4: Inject content by fetching the local markdown file
+### Step 4: Inject content via fetch + execCommand
 
-Preferred page-side JS:
+The CodeMirror 6 editor on md-wechat.vercel.app does not expose its internal view API through the DOM — `cmView`, `cmTile`, and `view.dispatch()` all fail silently because the framework doesn't attach these properties to DOM elements in this deployment. Instead, use the browser's built-in editing API which CodeMirror listens to:
 
 ```js
 (async () => {
-  const res = await fetch('<SERVER_URL>/<encoded-file-name>.md')
+  const res = await fetch('<SERVER_URL>/wechat-md-input.md')
   const text = await res.text()
   const cmContent = document.querySelector('.cm-content')
   if (!cmContent) return 'error: .cm-content not found'
-  const view = cmContent.cmTile && cmContent.cmTile.view
-  if (!view) return 'error: CodeMirror view not found'
-
-  view.dispatch({
-    changes: { from: 0, to: view.state.doc.length, insert: text }
-  })
-
-  return `success:${text.length}`
+  cmContent.focus()
+  document.execCommand('selectAll')
+  const success = document.execCommand('insertText', false, text)
+  return success ? 'success:' + text.length : 'insertText failed'
 })()
 ```
 
-This is the preferred path because it avoids the most fragile part of the old workflow: **injecting a huge prebuilt script body into the page**.
+`execCommand('insertText')` works because CodeMirror intercepts native input events from the contenteditable element. The `focus` → `selectAll` → `insertText` sequence is the same thing that happens when a user pastes text, so it goes through CodeMirror's normal input pipeline and properly updates both the editor state and the preview pane.
 
 ### Step 5: Verify injection succeeded
 
-Inspect the page state.
+Inspect the page (snapshot, compact, maxChars ~500). Check:
+- The first paragraph matches the article's opening text
+- Article headings appear in the preview pane
+- Footer shows a reasonable word/character count
 
-Success signals:
-- the editor contains the article title / first paragraphs
-- the preview pane updates on the right
-- headings / lists / blockquotes render correctly
-
-Do **not** fail just because relative local image paths do not render in the preview.
+**Do not fail** because:
+- Relative local image paths don't render (expected, doesn't affect output)
+- Previous session's content still showing (means injection didn't take — retry Step 4)
 
 ### Step 6: Click `复制`
 
-Find the current `复制` button in the page state and click it.
+Click the `复制` button (in the top banner area).
 
-Expected success signal:
-- the click succeeds
-- if visible, success text says the rendered content has been copied to the clipboard
-
-Then tell the user the result is ready to paste into the WeChat public-account editor.
+The success toast ("已复制渲染后的内容到剪贴板") appears briefly and auto-dismisses. **Do not wait for or depend on catching the toast** — a successful click is sufficient confirmation.
 
 ### Step 7: Clean up
 
-Stop the temporary HTTP server process after copying succeeds.
+Kill the background HTTP server process.
 
 ---
 
-## Recommended sequence
+## Compact execution sequence
 
-1. prepare the markdown file with `prepare-markdown.js`
-2. start `temp-http.py` in the background
-3. capture `SERVER_URL=...` from process output
-4. open `https://md-wechat.vercel.app/`
-5. set localStorage style preset
-6. reload the page
-7. run page-side JS that `fetch()`es the local markdown and injects it into CodeMirror
-8. verify editor + preview updated
-9. click `复制`
-10. stop the temp server
-11. report clipboard success to the user
+For quick reference, the entire flow:
+
+1. `exec`: `node prepare-markdown.js <file> --strip-frontmatter`
+2. `exec(background)`: `python3 temp-http.py /tmp` → capture `SERVER_URL`
+3. Navigate to `https://md-wechat.vercel.app/`
+4. Evaluate JS: set localStorage preset
+5. Navigate (reload) same URL
+6. Evaluate JS: fetch + `selectAll` + `insertText`
+7. Snapshot: verify content
+8. Click: 复制 button
+9. Kill HTTP server
+10. Report to user
+
+Steps 3-4-5 can merge: set localStorage first, then navigate once (the navigate acts as the reload).
 
 ---
 
 ## Fallbacks
 
-### Fallback A: direct inline injection for smaller files
+### Fallback A: direct inline injection for small files (<3000 chars)
 
-If local serving is unavailable and the file is small enough, you may read the markdown and inject it directly with page evaluation.
+If the HTTP server approach is unavailable and the file is short:
 
-Use this only for relatively small articles, because long payloads are fragile.
-
-### Fallback B: legacy create-injection.js flow
-
-If needed, the older helper still exists:
-
-```bash
-node <skill-dir>/scripts/create-injection.js <markdown-file> --strip-frontmatter
+```js
+(() => {
+  const text = `<escaped markdown content>`
+  const cmContent = document.querySelector('.cm-content')
+  if (!cmContent) return 'error'
+  cmContent.focus()
+  document.execCommand('selectAll')
+  return document.execCommand('insertText', false, text) ? 'ok' : 'fail'
+})()
 ```
 
-That path is still valid, but it should be treated as a fallback rather than the default.
+Only for short articles — long payloads break due to escaping issues in the evaluate call.
+
+### Fallback B: legacy create-injection.js (deprecated)
+
+The older `create-injection.js` script uses `cmTile.view.dispatch()` which no longer works on md-wechat.vercel.app. Avoid unless the site changes its CodeMirror configuration.
 
 ---
 
 ## Troubleshooting
 
-### `.cm-content not found`
-The page is not fully ready. Reload or wait, then retry.
-
-### `CodeMirror view not found`
-The editor DOM exists, but CodeMirror is not fully initialized yet. Retry shortly.
-
-### Port already in use
-Use `temp-http.py` without forcing a fixed port.
-
-### Giant evaluate payload keeps breaking
-Do not keep fighting escaping. Switch to the local HTTP + fetch path.
-
-### Relative images fail in preview
-Expected for local blog image paths. If text rendering is correct, continue.
-
-### Copy appears to work but clipboard seems stale
-Verify the preview updated first, then click `复制` again.
+| Problem | Solution |
+|---------|----------|
+| `.cm-content not found` | Page not ready. Wait 2s and retry. |
+| `insertText` returns false | `.cm-content` not focused. Ensure `cmContent.focus()` runs first. |
+| Old content still showing | `selectAll` didn't cover everything. Navigate to a fresh page first. |
+| Port already in use | `temp-http.py` uses random port by default — shouldn't happen. |
+| Relative images fail in preview | Expected for local blog images. Does not affect clipboard output. |
+| Toast not visible after 复制 | Normal — auto-dismisses in ~2s. Click success = copy success. |
 
 ---
 
 ## Reporting format
 
-Reply concisely like this:
-
-- source: `<markdown-file>`
-- prepared markdown: `<temp-file>`
-- WeChat formatting: `copied to clipboard`
-- note: `relative local images may not render in md-wechat preview; this does not affect pasted output`
-
-If blocked, explicitly say which step failed and why.
+```
+- source: <markdown-file>
+- WeChat formatting: copied to clipboard ✅
+- note: relative local images may not render in preview; does not affect pasted output
+```

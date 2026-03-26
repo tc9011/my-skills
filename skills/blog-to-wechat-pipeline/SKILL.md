@@ -1,183 +1,173 @@
 ---
 name: blog-to-wechat-pipeline
-description: Use this skill when the user wants a single article turned into a complete 微信公众号 publishing package across 2 or more linked steps: translating it into Chinese for the blog, saving or updating the blog post with correct local image paths, formatting the final article into wechat-md / 微信公众号-ready content, and generating a matching cover image (including no-title variants). Trigger on requests like “翻译后发公众号”, “做成公众号发布素材”, “blog 这篇文章转公众号并配封面”, or any bundled article-to-blog-to-WeChat workflow. Do NOT use for translation only, wechat-md formatting only, cover generation only, or generic原创写作 without this multi-step adaptation pipeline.
+description: "End-to-end pipeline that takes a blog article and produces a complete 微信公众号 publishing package: WeChat-formatted content (copied to clipboard) + cover image. Optionally includes translation for non-Chinese sources. Use this skill when the user wants multiple publishing steps handled together — formatting + cover, or translate + format + cover. Triggers on: '转公众号格式并配图', '公众号排版+封面', 'blog-to-wechat-pipeline', '翻译后发公众号', '做成公众号发布素材', '和上面一样的流程', '走一下公众号流程', or any bundled article-to-WeChat workflow. If the user only needs one step, prefer the specific skill: wechat-md (formatting), baoyu-cover-image (cover), or baoyu-translate (translation)."
 ---
 
 # Blog → WeChat Pipeline
 
-Use this skill when the user wants the **whole publishing flow** handled, not just one isolated step.
+Take a blog article → (optionally translate) → format for 微信公众号 → generate cover image → report.
 
-Typical workflow:
-1. Translate the source article into Chinese and save it into the blog project
-2. Make sure blog-local assets (especially images) are stored and referenced correctly
-3. Format the final article into WeChat-compatible content with `wechat-md`
-4. Generate a WeChat/blog cover image
-5. If needed, produce a text-free cover variant or other lightweight edits
+## When to use this skill
 
-## What this skill is for
+The user wants **two or more** of these for a blog article:
+1. Translation into Chinese (only when requested or the source is not Chinese)
+2. WeChat 公众号排版 (copied to clipboard)
+3. Cover image generation
 
-This skill is optimized for Theon's actual workflow around:
-- article translation for the blog at `/Users/tangcheng/Documents/Projects/blog`
-- WeChat public-account formatting
-- cover image generation for translated technical articles
-
-If the user only wants **one** narrow step, prefer the more specific skill directly:
+If they only want one, use the specific skill directly:
+- formatting only → `wechat-md`
+- cover only → `baoyu-cover-image`
 - translation only → `baoyu-translate`
-- WeChat formatting only → `wechat-md`
-- cover image only → `baoyu-cover-image`
 
-Use **this** skill when the user clearly wants the pipeline captured or executed end-to-end.
+## Deciding whether translation is needed
+
+- **User explicitly says "翻译" / "translate"** → include translation step
+- **Source article is in a foreign language** → include translation step
+- **Source article is already in Chinese** and user didn't mention translation → skip translation, go straight to formatting + cover
+
+## Execution flow
+
+### Phase 0 (conditional): Translation
+
+Only run this phase when translation is needed.
+
+Follow the `baoyu-translate` skill conventions:
+
+1. Translate the source article into Chinese
+2. Save the translated article into the blog project at the correct path
+3. Validate image paths against the blog's actual directory structure
+
+#### Translation quality bar
+- Preserve facts, numbers, links, code blocks, and citations exactly
+- Write natural Chinese suitable for a technical blog — not literal translation
+- Keep the article structure, headings, lists, and footnotes
+- Translate technical concepts accurately; keep widely-understood English terms (e.g., API, SDK, Agent, RAG) as-is rather than forced-translating them
+- Place `<!--more-->` in the same relative position as the original
+
+#### Blog output checklist
+- Frontmatter matches local blog style (check nearby existing posts)
+- Title is appropriate and natural in Chinese
+- Image paths resolve according to the blog's real directory structure
+- Article saved in the correct year/content directory under `/Users/tangcheng/Documents/Projects/blog/src/content/posts/`
+
+### Phase 1: WeChat formatting
+
+Follow the `wechat-md` SKILL.md workflow. Key steps:
+
+1. **Prepare**: `node <wechat-md-skill>/scripts/prepare-markdown.js <article> --strip-frontmatter`
+2. **Serve**: `python3 <wechat-md-skill>/scripts/temp-http.py /tmp` (background, capture SERVER_URL)
+3. **Navigate**: open `https://md-wechat.vercel.app/`
+4. **Style**: evaluate JS to set localStorage preset, then reload
+5. **Inject**: evaluate JS — fetch from local server + `focus()` + `selectAll` + `execCommand('insertText')`
+   - The CodeMirror view API (`cmView.dispatch()`) is not accessible on this site — use `execCommand` which works through CodeMirror's native input handling
+6. **Verify**: snapshot — check first paragraph matches article
+7. **Copy**: click 复制 button (toast auto-dismisses, click success = copy success)
+8. **Clean**: kill HTTP server
+
+### Phase 2: Cover image generation
+
+**Can run in parallel with Phase 1** — start the image generation while browser automation runs.
+
+#### Default dimensions (from EXTEND.md preferences)
+
+| Dimension | Value |
+|-----------|-------|
+| Type | conceptual |
+| Palette | cool |
+| Rendering | flat-vector |
+| Text | **none** (default: no text on cover) |
+| Mood | balanced |
+| Font | clean |
+| Aspect | 16:9 |
+| Watermark | disabled |
+| Language | zh |
+
+Override only the dimensions the user explicitly mentions. If user says "带标题" → `text: title-only`.
+
+#### Image generation
+
+1. Analyze article content → identify the core concept and a fitting visual metaphor
+2. Craft a descriptive prompt:
+   - Abstract conceptual composition, not realistic scenes
+   - Cool color palette: deep navy (#1a2744), teal (#2dd4bf), sky blue (#40B8FA)
+   - Clean geometric shapes, 40-60% whitespace
+   - NO text, NO watermark, NO human figures (unless specifically requested)
+3. Generate via `nano-banana-pro`:
+   ```bash
+   uv run <nano-banana-pro-skill>/scripts/generate_image.py \
+     --prompt "<detailed visual description>" \
+     --filename "<workspace>/cover-image/<topic-slug>/cover.png" \
+     --resolution 1K
+   ```
+
+### Phase 3: Report
+
+```
+📋 公众号排版
+- 源文件: <path>
+- 状态: ✅ 已复制到剪贴板
+
+🎨 封面图
+- 位置: <path>
+- 风格: <type> / <palette> / <rendering> / <text> / <aspect>
+- 视觉隐喻: <brief description>
+```
+
+If translation was included, add:
+```
+📝 翻译
+- 源语言: <lang>
+- 译文: <path>
+```
+
+## Parallelization strategy
+
+Overlap work to minimize total time:
+
+```
+T0: Prepare markdown (strip frontmatter)
+T1: Start HTTP server (background) + Start image generation (background)
+T2: Browser: navigate → style → reload → inject → verify → copy
+T3: Kill HTTP server
+T4: Poll image generation for completion
+T5: Report both results
+```
+
+Image generation typically takes 15-30s, browser automation ~10-15s. Running them in parallel saves significant time.
 
 ## Critical lessons from prior runs
 
-### 1) Blog image paths must be validated against the real project structure
-Two translated posts previously had broken images because relative paths were written incorrectly. Do not assume a generic image folder layout.
+### 1) CodeMirror injection method
+The CodeMirror view API (`cmView.dispatch()`, `cmTile.view`) is not exposed on md-wechat.vercel.app because the deployment doesn't attach view references to DOM elements. Use the browser's editing API instead — it goes through CodeMirror's native input pipeline:
+```
+cmContent.focus() → document.execCommand('selectAll') → document.execCommand('insertText', false, text)
+```
 
-Always verify the article's actual image convention in the blog project before finalizing:
-- inspect nearby existing posts
-- inspect the actual `_images` or equivalent directory
-- make sure the markdown image path matches the blog's real relative path rules
+### 2) Blog image paths
+Relative image paths from the blog project won't render in md-wechat preview. This is expected and does NOT affect the clipboard output.
 
-Do not ship the article until image paths are checked.
+### 3) Toast notification for 复制
+The success toast auto-dismisses in ~2 seconds. Don't waste rounds trying to catch it. A successful click = content is in clipboard.
 
-### 2) `wechat-md` means the local skill flow first
-When the user says to use `wechat-md`, prefer the local `wechat-md` skill workflow rather than defaulting to a raw MCP call.
+### 4) Keep browser tab consistent
+Reuse the same tab/targetId across all browser calls within one formatting run.
 
-The intended flow is:
-- read the article markdown
-- run the helper script that strips frontmatter / `<!--more-->`
-- open `https://md-wechat.vercel.app/`
-- inject content into the editor
-- apply style settings
-- click `复制`
-- tell the user the result is in the clipboard
+### 5) Translation image path validation
+When translating articles that contain images, always check the blog project's actual image directory convention (inspect nearby existing posts) before writing paths. Broken image references have been the most common issue in translated posts.
 
-### 3) Cover generation may require model credentials and quota checks
-Before spending time debugging prompts, confirm that the image backend is actually usable:
-- required API key exists
-- quota is not exhausted
-- if a key was pasted in chat, warn that it should later be rotated because the chat history now contains it
+## Batch mode
 
-## Inputs to gather
-
-Before running the full flow, gather or infer these:
-- source article URL or file
-- target language (default `zh-CN` unless user says otherwise)
-- translation mode (default `refined` for publishable content)
-- target blog project path (default `/Users/tangcheng/Documents/Projects/blog` in this environment)
-- whether the user wants WeChat formatting now or later
-- whether the user wants a cover image now or later
-
-If preferences already exist for the underlying skills, reuse them.
-
-## Execution workflow
-
-## Step 1: Translate and save into the blog
-
-When translation is requested:
-1. Use `baoyu-translate` conventions and preferences
-2. Inspect nearby existing blog posts to match the house format
-3. Save the translated article into the correct blog content directory
-4. Download article images if needed and store them in the blog's actual image directory structure
-5. Validate all image paths before claiming completion
-
-### Translation quality bar
-- preserve facts, numbers, links, and citations
-- write natural Chinese suitable for a technical blog
-- keep the article structure, headings, lists, and footnotes
-- avoid literal translation when it hurts readability
-
-### Blog output checklist
-- frontmatter matches local style
-- title is appropriate for the blog
-- `<!--more-->` is placed correctly if the project uses it
-- image paths resolve according to the blog's real structure
-- article file is saved in the correct year/content directory
-
-## Step 2: Format for WeChat with `wechat-md`
-
-Use the **local `wechat-md` skill flow**.
-
-### Workflow
-1. Read the final markdown article
-2. Run the helper script:
-   - `node <wechat-md-skill>/scripts/create-injection.js <markdown-file> --strip-frontmatter`
-3. Open `https://md-wechat.vercel.app/`
-4. Apply the desired localStorage-based style preset
-5. Inject the cleaned article content into the editor
-6. Verify the editor and preview both updated
-7. Click `复制`
-8. Tell the user the WeChat-formatted content is now in the clipboard
-
-### Important notes
-- image loading errors in the online editor can be harmless when the blog uses relative local image paths
-- the goal is clipboard-ready rendered content, not a local HTML export unless the user explicitly asks
-- when using browser automation, keep to one tab and verify the `复制` button really fired
-
-## Step 3: Generate the cover image
-
-Use `baoyu-cover-image` conventions.
-
-### Default behavior for technical translated articles
-Unless the user specifies otherwise, a good starting point is:
-- type: `conceptual`
-- palette: `cool`
-- rendering: `flat-vector`
-- text: `title-only`
-- mood: `balanced`
-- font: `clean`
-- aspect: `16:9`
-
-This combination fits technical research / engineering articles well.
-
-### Cover prompt guidance
-For translated technical articles, prefer:
-- abstract conceptual composition over realistic people
-- clean editorial/infographic visual language
-- code / network / diagram / debugging / AI motifs when relevant
-- strong readability at blog header size
-- restrained, non-marketing visual tone unless the article is explicitly hype-oriented
-
-### Output expectations
-Save:
-- the prompt file
-- the generated `cover.png`
-- any source references if used
-
-If the user wants the cover used in the blog immediately, also place or copy it into the blog's expected asset location.
-
-## Step 4: Optional cover cleanup edits
-A common follow-up is removing large title text from the generated cover.
-
-If asked to remove title text:
-- use the image editing backend on the generated cover
-- preserve composition, colors, style, and balance
-- remove the text cleanly without adding replacement text
-- save as a variant such as `cover-no-title.png`
-
-## Communication style
-- Be concise and operational
-- Tell the user what is done, what path it was saved to, and what remains blocked
-- If blocked by credentials/quota, say that directly instead of pretending the problem is prompt quality
-
-## Output structure
-When the pipeline completes, report in this style:
-
-- article: `<path>`
-- WeChat formatting: `copied to clipboard` or `not run`
-- cover image: `<path>` or `not run`
-- cover variant: `<path>` or `not run`
-- important note: any path, credential, or quota caveat
+When the user wants multiple articles processed:
+- Process sequentially (one article at a time)
+- Reuse the same browser tab
+- Each article: prepare → inject → copy → generate cover → report
+- Final summary listing all paths
 
 ## Example triggers
-- “把这篇文章翻译一下，放进 blog，然后排成公众号格式，再做个封面图”
-- “把这个链接做成一套公众号发布素材”
-- “帮我把译文、公众号排版和封面图整个流程跑掉”
-- “把 blog 里的这篇文章转成微信公众号可发的版本，并配封面”
 
-## Non-goals
-This skill is not for:
-- pure social posting strategy
-- writing entirely new原创文章 from scratch without a source article
-- direct publishing to the WeChat backend
-- generic image generation unrelated to article publishing
+- "把这篇文章转成微信公众号格式并配图"
+- "blog-to-wechat-pipeline 这个 md 文件"
+- "公众号排版 + 封面，图不要文字"
+- "和上面一样的流程转一下这篇"
+- "翻译这篇英文文章，放进 blog，然后排成公众号格式再配封面"
+- "帮我把这几篇都走一遍公众号流程"
