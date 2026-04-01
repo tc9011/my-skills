@@ -24,9 +24,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/vercel-labs/agent-browser.git",
       "skillPath": "skills/agent-browser/SKILL.md",
-      "skillFolderHash": "5ddaf3ef36bf4f20687aaf726976e41b23b07fdf",
+      "skillFolderHash": "8a7c2d2d628e69f3ebd51e15255917bedb264201",
       "installedAt": "2026-01-28T02:47:36.082Z",
-      "updatedAt": "2026-03-25T13:25:46.170Z"
+      "updatedAt": "2026-04-01T02:51:25.493Z"
     },
     "ui-ux-pro-max": {
       "source": "nextlevelbuilder/ui-ux-pro-max-skill",
@@ -366,9 +366,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/microsoft/playwright-cli.git",
       "skillPath": "skills/playwright-cli/SKILL.md",
-      "skillFolderHash": "a5a8823e403adc13b2488aae9968d6d92adbd2d7",
+      "skillFolderHash": "63e9dd1320008c8dc9b5da3ba5f41f835829de91",
       "installedAt": "2026-03-01T11:11:51.556Z",
-      "updatedAt": "2026-03-01T11:11:51.556Z"
+      "updatedAt": "2026-04-01T02:51:29.835Z"
     },
     "playwright-generate-test": {
       "source": "github/awesome-copilot",
@@ -501,9 +501,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
       "skillPath": "skills/react-best-practices/SKILL.md",
-      "skillFolderHash": "bd8feeee219216aac928d1d8e5c61a928dba23dc",
+      "skillFolderHash": "190395c0dca241d4edfe36e585373e68ae7fbfa6",
       "installedAt": "2026-03-02T13:35:58.815Z",
-      "updatedAt": "2026-03-25T13:26:07.007Z"
+      "updatedAt": "2026-04-01T02:51:35.026Z"
     },
     "vercel-react-native-skills": {
       "source": "vercel-labs/agent-skills",
@@ -780,27 +780,27 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/jimliu/baoyu-skills.git",
       "skillPath": "skills/baoyu-translate/SKILL.md",
-      "skillFolderHash": "12e148c5ba27fb55424fc5a20df5e951f3b70fcf",
+      "skillFolderHash": "98a466b6123b53b026e57f4601df953b025a1315",
       "installedAt": "2026-03-09T07:38:50.128Z",
-      "updatedAt": "2026-03-15T05:19:54.394Z"
+      "updatedAt": "2026-04-01T02:51:45.365Z"
     },
     "baoyu-url-to-markdown": {
       "source": "jimliu/baoyu-skills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/jimliu/baoyu-skills.git",
       "skillPath": "skills/baoyu-url-to-markdown/SKILL.md",
-      "skillFolderHash": "8491b2780c6213b0e571427c2848267681664a4b",
+      "skillFolderHash": "d09f18ce0a4e101e699150e7734c505113adb957",
       "installedAt": "2026-03-09T07:38:50.632Z",
-      "updatedAt": "2026-03-25T13:28:23.638Z"
+      "updatedAt": "2026-04-01T02:51:55.138Z"
     },
     "baoyu-article-illustrator": {
       "source": "jimliu/baoyu-skills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/jimliu/baoyu-skills.git",
       "skillPath": "skills/baoyu-article-illustrator/SKILL.md",
-      "skillFolderHash": "25f4061302fd8e94666a8e0c2de43ca828413542",
+      "skillFolderHash": "3de29825c02f11e4c4faba983f32e56a8e466bd1",
       "installedAt": "2026-03-09T07:38:51.119Z",
-      "updatedAt": "2026-03-25T13:28:30.582Z"
+      "updatedAt": "2026-04-01T02:52:03.519Z"
     },
     "documentation-writer": {
       "source": "github/awesome-copilot",

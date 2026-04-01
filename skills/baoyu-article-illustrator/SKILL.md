@@ -1,7 +1,7 @@
 ---
 name: baoyu-article-illustrator
 description: Analyzes article structure, identifies positions requiring visual aids, generates illustrations with Type × Style two-dimension approach. Use when user asks to "illustrate article", "add images", "generate images for article", or "为文章配图".
-version: 1.56.1
+version: 1.57.0
 metadata:
   openclaw:
     homepage: https://github.com/JimLiu/baoyu-skills#baoyu-article-illustrator
@@ -118,7 +118,7 @@ Full template: [references/workflow.md](references/workflow.md#step-4-generate-o
 
 ⛔ **BLOCKING: Prompt files MUST be saved before ANY image generation.**
 
-**Execution strategy**: When multiple illustrations have saved prompt files and the task is now plain generation, prefer `baoyu-image-gen` batch mode (`build-batch.ts` → `--batchfile`) over spawning subagents. Use subagents only when each image still needs separate prompt iteration or creative exploration.
+**Execution strategy**: When multiple illustrations have saved prompt files and the task is now plain generation, prefer `baoyu-imagine` batch mode (`build-batch.ts` → `--batchfile`) over spawning subagents. Use subagents only when each image still needs separate prompt iteration or creative exploration.
 
 1. For each illustration, create a prompt file per [references/prompt-construction.md](references/prompt-construction.md)
 2. Save to `prompts/NN-{type}-{slug}.md` with YAML frontmatter
