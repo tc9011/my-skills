@@ -819,6 +819,15 @@
       "skillFolderHash": "fbf2c17fa4356e7802b055a3626c7dd6a5d509ea",
       "installedAt": "2026-03-19T07:58:43.109Z",
       "updatedAt": "2026-03-25T13:28:35.596Z"
+    },
+    "ai-daily-digest": {
+      "source": "vigorX777/ai-daily-digest",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vigorX777/ai-daily-digest.git",
+      "skillPath": "SKILL.md",
+      "skillFolderHash": "1f484a3f2f101cb0f1a94a35b1a1befe0f672b82",
+      "installedAt": "2026-03-31T10:00:16.585Z",
+      "updatedAt": "2026-03-31T10:00:16.585Z"
     }
   },
   "dismissed": {
@@ -826,15 +835,16 @@
   },
   "lastSelectedAgents": [
     "amp",
+    "antigravity",
     "cline",
     "codex",
     "cursor",
+    "deepagents",
     "gemini-cli",
     "github-copilot",
     "kimi-cli",
     "opencode",
     "warp",
-    "antigravity",
     "claude-code",
     "pi",
     "trae",
