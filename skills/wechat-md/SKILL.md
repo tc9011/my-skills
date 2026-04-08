@@ -10,7 +10,7 @@ description: "Format Markdown articles into WeChat-compatible content using md-w
 ## Design goals
 
 1. **Clipboard is the deliverable** — the job isn't done until rendered content is in the clipboard, not just displayed in the editor
-2. **Avoid giant inline payloads** — serving content via local HTTP and letting the page fetch it is far more reliable than escaping a 10K+ string into an evaluate call
+2. **No lingering processes** — the local HTTP server auto-exits after serving the file once, so no cleanup is needed
 3. **Browser automation agnostic** — the workflow uses standard primitives (navigate, evaluate JS, click, snapshot) that work across different automation runtimes
 4. **Tolerant of broken images** — blog articles with relative local image paths will show broken images in the preview, but this never affects the clipboard output
 
@@ -44,21 +44,19 @@ Default output: `/tmp/wechat-md-input.md`
 
 Skip `--strip-frontmatter` only if the user explicitly wants frontmatter-related content kept.
 
-### Step 2: Start a temporary local HTTP server
+### Step 2: Start a one-shot local HTTP server
 
-Serving the file locally avoids the most fragile part of this workflow: injecting a huge escaped string directly into a page evaluation. Instead, the page fetches the content over HTTP.
+The server avoids escaping issues when injecting large markdown into the browser. It **auto-exits after serving one request**, so no cleanup is needed.
 
 ```bash
-python3 <skill-dir>/scripts/temp-http.py /tmp
+python3 <skill-dir>/scripts/temp-http.py /tmp > /tmp/wechat-server.log 2>&1 &
+sleep 0.5
+cat /tmp/wechat-server.log
 ```
 
-Run this in **background** mode. It prints:
+This prints `SERVER_URL=http://127.0.0.1:<port>`. Capture the URL for Step 4.
 
-```text
-SERVER_URL=http://127.0.0.1:<port>
-```
-
-Capture that URL from process output before proceeding.
+**Important**: The `> /tmp/wechat-server.log 2>&1 &` pattern with `sleep` is required to prevent blocking. Read the URL from the log file, not from stdout directly.
 
 ### Step 3: Open md-wechat and apply the style preset
 
@@ -99,6 +97,8 @@ The CodeMirror 6 editor on md-wechat.vercel.app does not expose its internal vie
 })()
 ```
 
+Replace `<SERVER_URL>` with the URL from Step 2. The server auto-exits after this fetch completes.
+
 `execCommand('insertText')` works because CodeMirror intercepts native input events from the contenteditable element. The `focus` → `selectAll` → `insertText` sequence is the same thing that happens when a user pastes text, so it goes through CodeMirror's normal input pipeline and properly updates both the editor state and the preview pane.
 
 ### Step 5: Verify injection succeeded
@@ -118,9 +118,9 @@ Click the `复制` button (in the top banner area).
 
 The success toast ("已复制渲染后的内容到剪贴板") appears briefly and auto-dismisses. **Do not wait for or depend on catching the toast** — a successful click is sufficient confirmation.
 
-### Step 7: Clean up
+### Step 7: Done
 
-Kill the background HTTP server process.
+The HTTP server already exited after serving the file in Step 4. No cleanup needed.
 
 ---
 
@@ -129,15 +129,14 @@ Kill the background HTTP server process.
 For quick reference, the entire flow:
 
 1. `exec`: `node prepare-markdown.js <file> --strip-frontmatter`
-2. `exec(background)`: `python3 temp-http.py /tmp` → capture `SERVER_URL`
+2. `exec`: `python3 temp-http.py /tmp > /tmp/wechat-server.log 2>&1 &` then `sleep 0.5 && cat /tmp/wechat-server.log` → capture `SERVER_URL`
 3. Navigate to `https://md-wechat.vercel.app/`
 4. Evaluate JS: set localStorage preset
 5. Navigate (reload) same URL
-6. Evaluate JS: fetch + `selectAll` + `insertText`
+6. Evaluate JS: fetch from `SERVER_URL` + `selectAll` + `insertText` (server auto-exits after this)
 7. Snapshot: verify content
 8. Click: 复制 button
-9. Kill HTTP server
-10. Report to user
+9. Report to user
 
 Steps 3-4-5 can merge: set localStorage first, then navigate once (the navigate acts as the reload).
 
@@ -147,7 +146,7 @@ Steps 3-4-5 can merge: set localStorage first, then navigate once (the navigate 
 
 ### Fallback A: direct inline injection for small files (<3000 chars)
 
-If the HTTP server approach is unavailable and the file is short:
+If the file is short enough, skip the HTTP server entirely:
 
 ```js
 (() => {
@@ -175,7 +174,8 @@ The older `create-injection.js` script uses `cmTile.view.dispatch()` which no lo
 | `.cm-content not found` | Page not ready. Wait 2s and retry. |
 | `insertText` returns false | `.cm-content` not focused. Ensure `cmContent.focus()` runs first. |
 | Old content still showing | `selectAll` didn't cover everything. Navigate to a fresh page first. |
-| Port already in use | `temp-http.py` uses random port by default — shouldn't happen. |
+| Server log empty after sleep | Increase sleep to 1s. Or check python3 is available. |
+| `fetch` fails in evaluate | Server may have exited early or not started. Re-run Step 2. |
 | Relative images fail in preview | Expected for local blog images. Does not affect clipboard output. |
 | Toast not visible after 复制 | Normal — auto-dismisses in ~2s. Click success = copy success. |
 
