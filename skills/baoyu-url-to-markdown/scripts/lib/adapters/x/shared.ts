@@ -251,6 +251,39 @@ export function toHighResXImageUrl(rawUrl: string): string {
   }
 }
 
+function getVideoVariantBitrate(variant: JsonObject): number {
+  const value = variant.bitrate ?? variant.bit_rate;
+  return typeof value === "number" && Number.isFinite(value) ? value : 0;
+}
+
+function getVideoVariantContentType(variant: JsonObject): string {
+  const value = variant.content_type ?? variant.contentType;
+  return typeof value === "string" ? value.toLowerCase() : "";
+}
+
+export function resolveBestXVideoVariantUrl(mediaInfo: unknown): string | undefined {
+  if (!isRecord(mediaInfo)) {
+    return undefined;
+  }
+
+  const variantsSource =
+    Array.isArray(mediaInfo.variants)
+      ? mediaInfo.variants
+      : isRecord(mediaInfo.video_info) && Array.isArray(mediaInfo.video_info.variants)
+        ? mediaInfo.video_info.variants
+        : [];
+
+  const variants = variantsSource
+    .filter(
+      (variant): variant is JsonObject =>
+        isRecord(variant) && typeof variant.url === "string" && variant.url.length > 0,
+    )
+    .filter((variant) => getVideoVariantContentType(variant) === "video/mp4")
+    .sort((left, right) => getVideoVariantBitrate(right) - getVideoVariantBitrate(left));
+
+  return typeof variants[0]?.url === "string" ? variants[0].url : undefined;
+}
+
 export function getTweetMedia(tweet: JsonObject): XMedia[] {
   const legacy = getLegacy(tweet);
   const extendedEntities = isRecord(legacy.extended_entities) ? legacy.extended_entities : emptyObject();
@@ -268,10 +301,14 @@ export function getTweetMedia(tweet: JsonObject): XMedia[] {
           alt: typeof value.ext_alt_text === "string" ? value.ext_alt_text : undefined,
         };
       }
-      if ((value.type === "video" || value.type === "animated_gif") && typeof value.media_url_https === "string") {
+      if (value.type === "video" || value.type === "animated_gif") {
+        const videoUrl = resolveBestXVideoVariantUrl(value);
+        if (!videoUrl) {
+          return null;
+        }
         return {
           type: value.type,
-          url: value.media_url_https,
+          url: videoUrl,
         };
       }
       return null;

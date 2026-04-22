@@ -9,18 +9,43 @@ import {
   getUser,
   isRecord,
   normalizeTitle,
+  resolveBestXVideoVariantUrl,
   toHighResXImageUrl,
   toXTweet,
 } from "./shared";
 import type { JsonObject } from "./types";
 
-function resolveArticleMediaUrl(mediaInfo: JsonObject): string {
+interface ArticleMedia {
+  kind: "image" | "video";
+  url: string;
+}
+
+function resolveArticleMedia(mediaInfo: JsonObject): ArticleMedia | null {
+  const videoUrl = resolveBestXVideoVariantUrl(mediaInfo);
+  if (videoUrl) {
+    return {
+      kind: "video",
+      url: videoUrl,
+    };
+  }
+
   const rawUrl =
     (typeof mediaInfo.original_img_url === "string" && mediaInfo.original_img_url) ||
     (typeof mediaInfo.url === "string" && mediaInfo.url) ||
     "";
 
-  return rawUrl ? toHighResXImageUrl(rawUrl) : "";
+  if (!rawUrl) {
+    return null;
+  }
+
+  return {
+    kind: "image",
+    url: toHighResXImageUrl(rawUrl),
+  };
+}
+
+function resolveArticleMediaUrl(mediaInfo: JsonObject): string {
+  return resolveArticleMedia(mediaInfo)?.url ?? "";
 }
 
 function normalizeEntityMap(entityMap: unknown): Map<string, JsonObject> {
@@ -139,8 +164,8 @@ function getTweetId(entityMap: Map<string, JsonObject>, entityKey: unknown): str
   return data.tweetId;
 }
 
-function buildMediaUrlMap(articleResult: JsonObject): Map<string, string> {
-  const mediaMap = new Map<string, string>();
+function buildMediaMap(articleResult: JsonObject): Map<string, ArticleMedia> {
+  const mediaMap = new Map<string, ArticleMedia>();
   const mediaEntities = Array.isArray(articleResult.media_entities) ? articleResult.media_entities : [];
 
   for (const entity of mediaEntities) {
@@ -148,25 +173,28 @@ function buildMediaUrlMap(articleResult: JsonObject): Map<string, string> {
       continue;
     }
 
-    const mediaInfo = entity.media_info;
-    const url = resolveArticleMediaUrl(mediaInfo);
-    if (url) {
-      mediaMap.set(entity.media_id, url);
+    const media = resolveArticleMedia(entity.media_info);
+    if (media) {
+      mediaMap.set(entity.media_id, media);
     }
   }
 
   const coverMedia = isRecord(articleResult.cover_media) ? articleResult.cover_media : null;
   if (coverMedia && typeof coverMedia.media_id === "string" && isRecord(coverMedia.media_info)) {
-    const url = resolveArticleMediaUrl(coverMedia.media_info);
-    if (url) {
-      mediaMap.set(coverMedia.media_id, url);
+    const media = resolveArticleMedia(coverMedia.media_info);
+    if (media) {
+      mediaMap.set(coverMedia.media_id, media);
     }
   }
 
   return mediaMap;
 }
 
-function getMediaMarkdown(entityMap: Map<string, JsonObject>, entityKey: unknown, mediaMap: Map<string, string>): string[] {
+function getMediaMarkdown(
+  entityMap: Map<string, JsonObject>,
+  entityKey: unknown,
+  mediaMap: Map<string, ArticleMedia>,
+): string[] {
   const key =
     typeof entityKey === "string" || typeof entityKey === "number"
       ? String(entityKey)
@@ -182,19 +210,19 @@ function getMediaMarkdown(entityMap: Map<string, JsonObject>, entityKey: unknown
 
   const data = isRecord(entity.data) ? entity.data : {};
   const mediaItems = Array.isArray(data.mediaItems) ? data.mediaItems : [];
-  const urls: string[] = [];
+  const media: ArticleMedia[] = [];
 
   for (const item of mediaItems) {
     if (!isRecord(item) || typeof item.mediaId !== "string") {
       continue;
     }
-    const url = mediaMap.get(item.mediaId);
-    if (url && !urls.includes(url)) {
-      urls.push(url);
+    const mediaItem = mediaMap.get(item.mediaId);
+    if (mediaItem && !media.some((value) => value.url === mediaItem.url)) {
+      media.push(mediaItem);
     }
   }
 
-  return urls.map((url) => `![](${url})`);
+  return media.map((item) => item.kind === "image" ? `![](${item.url})` : `[video](${item.url})`);
 }
 
 function resolveTweetMarkdown(payloads: unknown[], tweetId: string, pageUrl: string): string | null {
@@ -250,7 +278,7 @@ function replaceLinkEntities(text: string, block: JsonObject, entityMap: Map<str
 function renderAtomicBlock(
   block: JsonObject,
   entityMap: Map<string, JsonObject>,
-  mediaMap: Map<string, string>,
+  mediaMap: Map<string, ArticleMedia>,
   payloads: unknown[],
   pageUrl: string,
 ): string | null {
@@ -293,7 +321,7 @@ function renderAtomicBlock(
 function renderArticleBlocks(
   blocks: unknown[],
   entityMap: Map<string, JsonObject>,
-  mediaMap: Map<string, string>,
+  mediaMap: Map<string, ArticleMedia>,
   payloads: unknown[],
   pageUrl: string,
 ): string {
@@ -396,7 +424,7 @@ export function extractArticleDocumentFromPayload(
   const contentState = isRecord(articleResult.content_state) ? articleResult.content_state : {};
   const blocks = Array.isArray(contentState.blocks) ? contentState.blocks : [];
   const entityMap = normalizeEntityMap(contentState.entityMap);
-  const mediaMap = buildMediaUrlMap(articleResult);
+  const mediaMap = buildMediaMap(articleResult);
   const richMarkdown = renderArticleBlocks(blocks, entityMap, mediaMap, payloads, pageUrl);
   const plainText = typeof articleResult.plain_text === "string" ? articleResult.plain_text.trim() : "";
   const markdown = richMarkdown || plainText || getTweetText(tweet);
