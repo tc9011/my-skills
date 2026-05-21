@@ -176,6 +176,8 @@ Based on Step 2 content analysis, recommend a preset first (sets both type & sty
 - [Alternative preset] — [brief]
 - Or choose type manually: infographic / scene / flowchart / comparison / framework / timeline / mixed
 
+**Default**: if Step 2 found no strong content signal, the recommended preset MUST be `hand-drawn-edu` (infographic + sketch-notes + macaron — warm cream paper, black hand-drawn lines, soft pastel blocks). This is the universal fallback.
+
 **If user picks a preset → skip Q3** (type & style both resolved).
 **If user picks a type → Q3 is REQUIRED.**
 
@@ -203,12 +205,14 @@ If no `preferred_style` (present Core Styles first):
 
 | Core Style | Maps To | Best For |
 |------------|---------|----------|
+| `hand-drawn` | sketch-notes | **Default.** Warm cream paper, black hand-drawn lines, pastel blocks — educational infographics, concept explainers, onboarding, general knowledge articles |
 | `minimal-flat` | notion | General, knowledge sharing, SaaS |
 | `sci-fi` | blueprint | AI, frontier tech, system design |
-| `hand-drawn` | sketch/warm | Relaxed, reflective, casual |
 | `editorial` | editorial | Processes, data, journalism |
 | `scene` | warm/watercolor | Narratives, emotional, lifestyle |
 | `poster` | screen-print | Opinion, editorial, cultural, cinematic |
+
+**Default recommendation**: when Step 2 surfaces no strong content signal, recommend **`hand-drawn-edu`** preset (→ infographic + sketch-notes + macaron) as the primary option in Q1. When the user picks a type manually without a preferred_style, recommend `sketch-notes` first in Q3.
 
 Style selection based on Type × Style compatibility matrix (styles.md).
 **In Step 5.1**, read `styles/<style>.md` for visual elements and rendering rules.
@@ -331,8 +335,11 @@ Prompt Files:
 **DO NOT** pass ad-hoc inline text to `--prompt` without first saving prompt files. The generation command should either use `--promptfiles prompts/NN-{type}-{slug}.md` or read the saved file content for `--prompt`.
 
 **Execution choice**:
-- If multiple illustrations already have saved prompt files and the task is now plain generation, prefer the chosen backend's batch interface (if it offers one); otherwise generate sequentially
-- Use subagents only when each illustration still needs separate prompt rewriting, style exploration, or other per-image reasoning before generation
+- If multiple illustrations already have saved prompt files and the task is now plain generation, use batch generation by default.
+- Prefer the chosen backend's native batch / multi-task interface when available.
+- If the backend has no native batch interface but the runtime can issue parallel tool calls, dispatch up to `generation_batch_size` tasks at a time. Default: `4`. The current user request overrides EXTEND.md.
+- Generate sequentially only when neither backend batch nor runtime parallel calls are available.
+- Use subagents only when each illustration still needs separate prompt rewriting, style exploration, or other per-image reasoning before generation. Do not use subagents just to parallelize rendering.
 
 **CRITICAL - References in Frontmatter**:
 - Only add `references` field if files ACTUALLY EXIST in `references/` directory
@@ -341,7 +348,14 @@ Prompt Files:
 
 ### 5.2 Select Generation Skill
 
-Check available skills. If multiple, ask user.
+Follow the `## Image Generation Tools` rule at the top of `SKILL.md`. Concretely:
+
+- If `imagegen` is in your available-skills list (Codex), use it — invoke via the `Skill` tool with `skill: "imagegen"`.
+- Else if the EXTEND.md pin is available, use it.
+- Else if exactly one non-native backend is installed, use it.
+- Else, ask the user.
+
+**Do not generate SVG, HTML, or any code-based vector as a substitute for the raster image.** If no raster backend can be resolved, ask the user how to proceed.
 
 ### 5.3 Process References ⚠️ REQUIRED if references saved in Step 1.0
 
@@ -383,12 +397,18 @@ Add: `Include a subtle watermark "[content]" at [position].`
 
 ### 5.5 Generate
 
-1. For each illustration:
-   - **Backup rule**: If image file exists, rename to `NN-{type}-{slug}-backup-YYYYMMDD-HHMMSS.md`
-   - If references with `direct` usage: include `--ref` parameter
-   - Generate image
-2. After each: "Generated X/N"
-3. On failure: retry once, then log and continue
+1. Build a generation task list from saved prompt files:
+   - `prompt_file`: `{output-dir}/prompts/NN-{type}-{slug}.md`
+   - `output_file`: `{output-dir}/NN-{type}-{slug}.png`
+   - `aspect_ratio`: from prompt frontmatter or prompt body
+   - `refs`: only verified `direct` references from prompt frontmatter
+2. **Backup rule**: Before dispatching a task, if its output image already exists, rename it to `NN-{type}-{slug}-backup-YYYYMMDD-HHMMSS.{ext}`.
+3. Dispatch tasks in batches:
+   - Native batch backend: send all eligible tasks, or chunks of `generation_batch_size` if the backend has a practical limit.
+   - Runtime parallel calls: issue up to `generation_batch_size` image calls concurrently, then continue with the next chunk.
+   - Sequential fallback: process one task at a time.
+4. After each completed task, record: "Generated X/N: filename".
+5. On failure: retry the failed task once from the same saved prompt file. Keep successful outputs and continue.
 
 ---
 

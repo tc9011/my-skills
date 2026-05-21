@@ -1,0 +1,51 @@
+{
+  "skill_name": "figma-design-lint",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "Review this Figma design for code generation readiness: https://www.figma.com/design/xCXS2KIjdicRExYRFNPfOL/WMP-Gifting?node-id=2422-61194&m=dev. Give me a detailed audit report with issues and scores.",
+      "expected_output": "A structured report covering 9 categories with P0-P3 severity issues, a score out of 100, and a Quick Fix Checklist. Should attempt to call get_metadata, get_variable_defs, get_design_context.",
+      "files": [],
+      "expectations": [
+        "Report includes a Methodology section listing MCP tools used (get_metadata, get_variable_defs, etc.)",
+        "Report mentions all 9 categories by exact name: File & Layer Organization, Naming Conventions, Layout Structure, Component Usage, Typography, Color & Style Tokens, Images Icons & Assets, State Completeness, MCP/Codegen Readiness",
+        "The score is expressed as X/100 (not /10 or /20)",
+        "Report includes P0-P3 severity levels with dedicated sections",
+        "Report includes a Positive Findings section",
+        "Report includes a Quick Fix Checklist",
+        "An HTML report file (report.html) is generated alongside report.md",
+        "Each issue cites specific evidence from MCP tool output (node IDs, names, or coordinates)"
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "帮我检查一下这个Figma设计文件是否符合开发规范: https://www.figma.com/design/xCXS2KIjdicRExYRFNPfOL/WMP-Gifting?node-id=2422-61113&m=dev 这个是一个多页面的section，请全部检查。",
+      "expected_output": "Should detect multi-page section, create pipeline.md to track pages, use pipeline-based workflow for parallel audits, and generate summary HTML.",
+      "files": [],
+      "expectations": [
+        "The agent detects this is a multi-page section and reports the number of pages found",
+        "A pipeline.md file is created in the reports/ directory to track page evaluation status",
+        "The pipeline.md contains sections for pending and completed pages",
+        "The report contains a per-page scores table with page names and individual scores",
+        "The report includes a Cross-Page Issues section",
+        "The score uses /100 scale for both overall and per-page scores",
+        "Report includes a Methodology section listing MCP tools used",
+        "A summary HTML file (summary.html) is generated for multi-page output"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Quick design lint on this Figma page please: https://www.figma.com/design/xCXS2KIjdicRExYRFNPfOL/WMP-Gifting?node-id=2422-61201&m=dev — just the basics, is it ready for code gen?",
+      "expected_output": "Single-page audit. Should still cover all 9 categories even though user said 'just the basics'. Should generate both report.md and report.html.",
+      "files": [],
+      "expectations": [
+        "The agent audits all 9 categories by exact name despite casual request phrasing",
+        "The agent generates report.md with full structured content",
+        "The agent generates report.html",
+        "The score is out of 100",
+        "Severity levels P0-P3 are used with dedicated sections",
+        "No categories are skipped or merged due to the casual tone of the request"
+      ]
+    }
+  ]
+}

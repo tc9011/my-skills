@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Figma Design Lint Report — __TITLE__</title>
+    <style>
+      :root {
+        --p0: #dc2626;
+        --p0-bg: rgba(220, 38, 38, 0.12);
+        --p1: #ea580c;
+        --p1-bg: rgba(234, 88, 12, 0.12);
+        --p2: #ca8a04;
+        --p2-bg: rgba(202, 138, 4, 0.12);
+        --p3: #6b7280;
+        --p3-bg: rgba(107, 114, 128, 0.1);
+        --pass: #16a34a;
+        --bg: #0f1117;
+        --surface: #1a1d27;
+        --surface2: #232733;
+        --text: #e4e4e7;
+        --text2: #a1a1aa;
+        --border: #2e3240;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: var(--bg);
+        color: var(--text);
+      }
+      .layout {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 32px 40px;
+      }
+      .report-header {
+        margin-bottom: 32px;
+      }
+      .report-header h1 {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .report-header .meta {
+        font-size: 13px;
+        color: var(--text2);
+      }
+      .report-header .meta a {
+        color: #60a5fa;
+        text-decoration: none;
+      }
+      .score-card {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 24px;
+      }
+      .score-ring {
+        width: 80px;
+        height: 80px;
+        position: relative;
+      }
+      .score-ring svg {
+        transform: rotate(-90deg);
+      }
+      .score-ring .value {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        font-weight: 800;
+      }
+      .score-stats {
+        display: flex;
+        gap: 20px;
+      }
+      .stat {
+        text-align: center;
+      }
+      .stat .num {
+        font-size: 20px;
+        font-weight: 700;
+      }
+      .stat .label {
+        font-size: 11px;
+        color: var(--text2);
+        margin-top: 2px;
+      }
+      .verdict {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        margin-top: 8px;
+      }
+      .verdict.not-ready {
+        background: rgba(220, 38, 38, 0.15);
+        color: #fca5a5;
+      }
+      .verdict.needs-work {
+        background: rgba(234, 88, 12, 0.15);
+        color: #fdba74;
+      }
+      .verdict.ready {
+        background: rgba(22, 163, 74, 0.15);
+        color: #86efac;
+      }
+      .cat-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 32px;
+        font-size: 13px;
+      }
+      .cat-table th {
+        text-align: left;
+        padding: 8px 12px;
+        border-bottom: 2px solid var(--border);
+        color: var(--text2);
+        font-weight: 500;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .cat-table td {
+        padding: 8px 12px;
+        border-bottom: 1px solid var(--border);
+      }
+      .cat-table tr:hover td {
+        background: var(--surface);
+      }
+      .status-pass {
+        color: var(--pass);
+      }
+      .status-warn {
+        color: var(--p2);
+      }
+      .status-fail {
+        color: var(--p0);
+      }
+      .issue-group {
+        margin-bottom: 32px;
+      }
+      .issue-group h2 {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--border);
+      }
+      .issue {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        transition: border-color 0.15s;
+      }
+      .issue:hover {
+        border-color: #555;
+      }
+      .issue.active {
+        border-color: #60a5fa;
+      }
+      .issue-head {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+      .issue-sev {
+        font-size: 11px;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 4px;
+        color: #fff;
+      }
+      .issue-sev.p0 {
+        background: var(--p0);
+      }
+      .issue-sev.p1 {
+        background: var(--p1);
+      }
+      .issue-sev.p2 {
+        background: var(--p2);
+      }
+      .issue-sev.p3 {
+        background: var(--p3);
+      }
+      .issue-title {
+        font-weight: 600;
+        font-size: 14px;
+      }
+      .issue-cat {
+        font-size: 11px;
+        color: var(--text2);
+        margin-left: auto;
+      }
+      .issue-body {
+        font-size: 13px;
+        color: var(--text2);
+        line-height: 1.6;
+      }
+      .issue-body strong {
+        color: var(--text);
+      }
+      .issue-body code {
+        background: var(--surface2);
+        padding: 1px 5px;
+        border-radius: 3px;
+        font-size: 12px;
+      }
+      .issue-fix {
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid var(--border);
+        font-size: 12px;
+        color: #86efac;
+      }
+      .issue-location {
+        margin-top: 6px;
+        font-size: 11px;
+        color: var(--text2);
+        font-family: 'SF Mono', 'Fira Code', monospace;
+        background: var(--surface2);
+        padding: 4px 8px;
+        border-radius: 4px;
+        line-height: 1.5;
+      }
+      .checklist {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 32px;
+      }
+      .checklist h2 {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+      .check-item {
+        padding: 6px 0;
+        font-size: 13px;
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+      }
+      .check-item .sev {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 1px 5px;
+        border-radius: 3px;
+        color: #fff;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+      .positives {
+        background: rgba(22, 163, 74, 0.08);
+        border: 1px solid rgba(22, 163, 74, 0.25);
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 32px;
+      }
+      .positives h2 {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: #86efac;
+      }
+      .positives li {
+        font-size: 13px;
+        line-height: 1.7;
+        color: var(--text2);
+        margin-left: 16px;
+      }
+      .systemic {
+        margin-bottom: 32px;
+      }
+      .systemic h2 {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+      .systemic-item {
+        background: var(--surface);
+        border-left: 3px solid var(--p1);
+        padding: 12px 16px;
+        margin-bottom: 8px;
+        border-radius: 0 8px 8px 0;
+      }
+      .systemic-item h4 {
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .systemic-item p {
+        font-size: 12px;
+        color: var(--text2);
+        line-height: 1.5;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <div class="report-header">
+        <h1>Figma Design Lint Report</h1>
+        <div class="meta">__META__</div>
+      </div>
+      __SCORE_CARD__ __CATEGORY_TABLE__ __ISSUE_GROUPS__ __SYSTEMIC__ __POSITIVES__ __CHECKLIST__
+    </div>
+    <script>
+      document.querySelectorAll('.issue[data-issue]').forEach((card) => {
+        card.addEventListener('click', () => {
+          document.querySelectorAll('.issue').forEach((el) => el.classList.remove('active'))
+          card.classList.add('active')
+        })
+      })
+    </script>
+  </body>
+</html>
