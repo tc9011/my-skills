@@ -586,6 +586,15 @@
       "pluginName": "mattpocock-skills",
       "installedAt": "2026-07-08T09:50:09.724Z",
       "updatedAt": "2026-07-08T09:50:09.724Z"
+    },
+    "bb-browser": {
+      "source": "epiral/bb-browser",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/epiral/bb-browser.git",
+      "skillPath": "skills/bb-browser/SKILL.md",
+      "skillFolderHash": "9db1997316bd75d9c305e9d0251def4de5e1209a",
+      "installedAt": "2026-07-10T02:50:32.460Z",
+      "updatedAt": "2026-07-10T02:50:32.460Z"
     }
   },
   "dismissed": {
