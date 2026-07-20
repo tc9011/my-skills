@@ -605,6 +605,15 @@
       "pluginName": "mattpocock-skills",
       "installedAt": "2026-07-17T03:58:30.052Z",
       "updatedAt": "2026-07-17T03:58:30.052Z"
+    },
+    "cubox": {
+      "source": "OLCUBO/cubox-cli",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/OLCUBO/cubox-cli.git",
+      "skillPath": "skills/cubox/SKILL.md",
+      "skillFolderHash": "d3041887cfa85432594c8c470b596b32494cadff",
+      "installedAt": "2026-07-20T08:37:23.350Z",
+      "updatedAt": "2026-07-20T08:38:38.892Z"
     }
   },
   "dismissed": {
