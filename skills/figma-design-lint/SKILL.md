@@ -20,7 +20,8 @@ figma-design-lint/
     ├── report-format.md          # Full markdown report templates (single + multi-page)
     ├── html-generation.md        # HTML placeholder replacement + issue card format
     ├── subagent-template.md      # Subagent prompt template + batching rules
-    └── pipeline-template.md      # Pipeline-based multi-page workflow + loop logic
+    ├── pipeline-template.md      # Pipeline-based multi-page workflow + loop logic
+    └── token-scale-reference.md  # CDS v2 token scales + allowed values for compliance checks
 ```
 
 ## Input
@@ -121,6 +122,8 @@ Use the **Figma Dev Mode MCP** tools:
 > ⛔ **`get_screenshot` is NOT available and MUST NOT appear anywhere in the report.** Do not mention it in the Methodology table, tool list, or any other section. The only tools to list in Methodology are: `get_metadata`, `get_variable_defs`, and optionally `get_design_context`.
 
 **Data strategy for large files**: Start with `get_metadata` on the main frame, `get_variable_defs` once for the file, then drill deeper per section as needed. Don't try to audit everything in one pass.
+
+**Token compliance**: `get_variable_defs` is critical for Category 6 (Color & Style Tokens). It reveals which variables are defined and allows checking whether nodes are bound to semantic tokens. Cross-reference with `references/token-scale-reference.md` for the CDS v2 allowed values. If `get_variable_defs` returns nothing, fall back to numeric value matching against the scale reference.
 
 ## Step 2: Checklist-Driven Audit
 
