@@ -24,13 +24,14 @@ import {
   checkElementMotion,
   checkElementOversizedH1,
   checkElementQuality,
+  checkElementRadialSpotlight,
   checkCreamPalette,
   checkHtmlPatterns,
+  checkKickerAboveHeadingFromDoc,
   checkNumberedSectionLabelsFromDoc,
   checkPageLayout,
   checkPageQualityFromDoc,
   checkRepeatedContainerTextFromDoc,
-  checkRepeatedSectionKickersFromDoc,
   resolveBackground,
   resolveBorderRadiusPx,
 } from '../../rules/checks.mjs';
@@ -105,6 +106,7 @@ const STATIC_ELEMENT_RULES = [
   { id: 'oversized-h1', selector: 'h1', run: (el, tag, style, window) => checkElementOversizedH1(el, style, tag, window) },
   { id: 'clipped-overflow-container', selector: '*', run: (el, tag, style, window) => checkElementClippedOverflow(el, style, tag, window) },
   { id: 'gpt-thin-border-wide-shadow', selector: '*', run: (el, tag, style) => checkElementGptBorderShadow(el, style) },
+  { id: 'radial-spotlight-glow', selector: '*', run: (el, tag, style, window) => checkElementRadialSpotlight(el, style, tag, window) },
 ];
 
 async function detectHtml(filePath, options = {}) {
@@ -200,7 +202,7 @@ async function detectHtml(filePath, options = {}) {
     for (const f of runPageCheck('typography-rules', () => checkStaticPageTypography(document, window))) {
       findings.push(finding(f.id, filePath, f.snippet));
     }
-    for (const f of runPageCheck('repeated-section-kickers', () => checkRepeatedSectionKickersFromDoc(document, window))) {
+    for (const f of runPageCheck('kicker-above-heading', () => checkKickerAboveHeadingFromDoc(document, window))) {
       findings.push(finding(f.id, filePath, f.snippet));
     }
     for (const f of runPageCheck('numbered-section-labels', () => checkNumberedSectionLabelsFromDoc(document, window))) {
