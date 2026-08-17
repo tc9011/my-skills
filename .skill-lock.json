@@ -10,15 +10,6 @@
       "installedAt": "2026-01-28T02:47:12.903Z",
       "updatedAt": "2026-07-23T09:34:12.273Z"
     },
-    "agent-browser": {
-      "source": "vercel-labs/agent-browser",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/vercel-labs/agent-browser.git",
-      "skillPath": "skills/agent-browser/SKILL.md",
-      "skillFolderHash": "037e8078db4b20b4aa25c04f21c6de7d335ec449",
-      "installedAt": "2026-01-28T02:47:36.082Z",
-      "updatedAt": "2026-07-23T09:34:16.819Z"
-    },
     "ui-ux-pro-max": {
       "source": "nextlevelbuilder/ui-ux-pro-max-skill",
       "sourceType": "github",
@@ -181,24 +172,6 @@
       "installedAt": "2026-02-06T18:31:31.644Z",
       "updatedAt": "2026-07-23T09:34:32.019Z"
     },
-    "template-skill": {
-      "source": "anthropics/skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/anthropics/skills.git",
-      "skillPath": "template/SKILL.md",
-      "skillFolderHash": "a38aa7fa73fd2835b9ce77a60274f7dc62d015a6",
-      "installedAt": "2026-02-06T19:01:22.274Z",
-      "updatedAt": "2026-02-06T19:01:22.274Z"
-    },
-    "algorithmic-art": {
-      "source": "anthropics/skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/anthropics/skills.git",
-      "skillPath": "skills/algorithmic-art/SKILL.md",
-      "skillFolderHash": "4aef6bcad51d058ec32b1acb9da436851863e56e",
-      "installedAt": "2026-02-06T19:01:22.672Z",
-      "updatedAt": "2026-04-22T05:51:11.864Z"
-    },
     "brand-guidelines": {
       "source": "anthropics/skills",
       "sourceType": "github",
@@ -279,15 +252,6 @@
       "skillFolderHash": "3cf9a8db32597ba3e24b584a3d696f4e11c7d7b6",
       "installedAt": "2026-02-06T19:01:26.848Z",
       "updatedAt": "2026-04-22T05:51:52.382Z"
-    },
-    "slack-gif-creator": {
-      "source": "anthropics/skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/anthropics/skills.git",
-      "skillPath": "skills/slack-gif-creator/SKILL.md",
-      "skillFolderHash": "c61d2f7bb6334b68a6936ad3f41ebfc7cb76fe2a",
-      "installedAt": "2026-02-06T19:01:27.253Z",
-      "updatedAt": "2026-04-22T05:52:03.648Z"
     },
     "theme-factory": {
       "source": "anthropics/skills",
@@ -541,15 +505,6 @@
       "installedAt": "2026-03-19T07:58:43.109Z",
       "updatedAt": "2026-06-24T06:43:00.096Z"
     },
-    "ai-daily-digest": {
-      "source": "vigorX777/ai-daily-digest",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/vigorX777/ai-daily-digest.git",
-      "skillPath": "SKILL.md",
-      "skillFolderHash": "1f484a3f2f101cb0f1a94a35b1a1befe0f672b82",
-      "installedAt": "2026-03-31T10:00:16.585Z",
-      "updatedAt": "2026-03-31T10:00:16.585Z"
-    },
     "figma-design-lint": {
       "source": "LEGO/ai-driven-workflow-viz",
       "sourceType": "github",
@@ -577,15 +532,6 @@
       "pluginName": "mattpocock-skills",
       "installedAt": "2026-07-08T09:50:09.724Z",
       "updatedAt": "2026-07-21T05:53:15.533Z"
-    },
-    "bb-browser": {
-      "source": "epiral/bb-browser",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/epiral/bb-browser.git",
-      "skillPath": "skills/bb-browser/SKILL.md",
-      "skillFolderHash": "9db1997316bd75d9c305e9d0251def4de5e1209a",
-      "installedAt": "2026-07-10T02:50:32.460Z",
-      "updatedAt": "2026-07-10T02:50:32.460Z"
     },
     "grilling": {
       "source": "mattpocock/skills",
@@ -814,15 +760,6 @@
       "installedAt": "2026-07-21T05:53:15.665Z",
       "updatedAt": "2026-07-21T05:53:15.665Z"
     },
-    "claude-handoff": {
-      "source": "mattpocock/skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/mattpocock/skills.git",
-      "skillPath": "skills/in-progress/claude-handoff/SKILL.md",
-      "skillFolderHash": "5a245865fed8cc05df59f8a15a31acf6871ba729",
-      "installedAt": "2026-07-21T05:53:15.735Z",
-      "updatedAt": "2026-07-21T05:53:15.735Z"
-    },
     "design-an-interface": {
       "source": "mattpocock/skills",
       "sourceType": "github",
@@ -858,15 +795,6 @@
       "skillFolderHash": "e487ef6954cbf6f2d96991cf79332c98354df9ef",
       "installedAt": "2026-07-21T05:53:15.756Z",
       "updatedAt": "2026-07-21T05:53:15.756Z"
-    },
-    "migrate-to-shoehorn": {
-      "source": "mattpocock/skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/mattpocock/skills.git",
-      "skillPath": "skills/misc/migrate-to-shoehorn/SKILL.md",
-      "skillFolderHash": "0aea91a3599a4bf7aeec17e3262d4cbcfcbeec23",
-      "installedAt": "2026-07-21T05:53:15.761Z",
-      "updatedAt": "2026-07-21T05:53:15.761Z"
     },
     "obsidian-vault": {
       "source": "mattpocock/skills",
