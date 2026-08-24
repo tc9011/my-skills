@@ -208,15 +208,6 @@
       "installedAt": "2026-02-06T19:01:24.318Z",
       "updatedAt": "2026-07-23T09:34:38.604Z"
     },
-    "internal-comms": {
-      "source": "anthropics/skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/anthropics/skills.git",
-      "skillPath": "skills/internal-comms/SKILL.md",
-      "skillFolderHash": "9869687dcf6deb6802ca88ac11e67b6f7278017a",
-      "installedAt": "2026-02-06T19:01:25.167Z",
-      "updatedAt": "2026-04-22T05:51:33.267Z"
-    },
     "mcp-builder": {
       "source": "anthropics/skills",
       "sourceType": "github",
@@ -721,15 +712,6 @@
       "skillFolderHash": "8ec0462658381bd1606d3f9db14ffc67df6a2a43",
       "installedAt": "2026-07-21T05:53:15.645Z",
       "updatedAt": "2026-08-24T02:06:51.826Z"
-    },
-    "git-guardrails-claude-code": {
-      "source": "mattpocock/skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/mattpocock/skills.git",
-      "skillPath": "skills/misc/git-guardrails-claude-code/SKILL.md",
-      "skillFolderHash": "ceed97af09633b300826d0ca0b1464c527ec9a35",
-      "installedAt": "2026-07-21T05:53:15.751Z",
-      "updatedAt": "2026-08-24T02:06:57.192Z"
     },
     "loop-me": {
       "source": "mattpocock/skills",
