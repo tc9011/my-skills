@@ -17,6 +17,7 @@ CLI companion to [vercel-labs/skills](https://github.com/vercel-labs/skills) —
 | Restore skills on new machine | `sm pull --repo owner/name` |
 | Re-link skills to agents | `sm link` |
 | Link skills to a project | `sm link --project` |
+| Clean up dangling symlinks | `sm prune` |
 
 ## Invocation
 
@@ -164,8 +165,24 @@ Agents that share the same `projectPath` (e.g., `trae` and `trae-cn` both use `.
 sm link --project --agents cursor opencode claude-code --skills my-skill --mode copy
 ```
 
-## Common Workflows
+### prune
 
+Removes symlinks in agent skill directories whose target no longer exists in `~/.agents/skills/`. These pile up when `sm pull` brings down a revision where skills were deleted upstream.
+
+```bash
+sm prune                     # scan every agent's global skills dir
+sm prune --agents cursor     # narrow to specific agents
+sm prune --project           # scan project dirs under the CWD
+sm prune --yes               # remove without confirmation
+```
+
+`sm link` runs this automatically after linking, scoped to the agents it just linked. Pass `--no-prune` to skip it, or `-y`/`--yes` to skip the confirmation.
+
+**Only these get removed:** entries that are symlinks AND point at a direct child of `~/.agents/skills/` AND whose target is gone. Real directories, regular files, and links pointing elsewhere are never touched. `~/.agents/skills` itself is never scanned.
+
+**For AI agents:** a bare `sm prune` in a non-interactive shell lists findings and deletes nothing — use it as a preview, then re-run with `--yes` to act.
+
+## Common Workflows
 ### First-time setup on a new machine
 
 ```bash
@@ -185,6 +202,13 @@ sm push    # backup local changes
 ```bash
 cd /path/to/project
 sm link --project --skills my-skill --agents cursor opencode claude-code
+```
+
+### Clean up after skills were deleted upstream
+
+```bash
+sm pull                         # link runs automatically and prunes dangling links
+sm prune                        # or sweep every agent dir, not just the linked ones
 ```
 
 ### Re-link after installing new skills
