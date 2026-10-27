@@ -765,6 +765,15 @@
       "skillFolderHash": "ac92229646fccf7315ae139c37b479b3790617f2",
       "installedAt": "2026-07-21T05:53:15.851Z",
       "updatedAt": "2026-08-24T02:07:20.685Z"
+    },
+    "lieflat-less-ai-tone": {
+      "source": "larashero3-dotcom/lieflat-less-ai-tone",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/larashero3-dotcom/lieflat-less-ai-tone.git",
+      "skillPath": "SKILL.md",
+      "skillFolderHash": "4da0082a6b5bfe3af46c0ea5ab5afbff59479749",
+      "installedAt": "2026-10-27T08:27:08.078Z",
+      "updatedAt": "2026-10-27T08:27:08.078Z"
     }
   },
   "dismissed": {
@@ -772,20 +781,20 @@
   },
   "lastSelectedAgents": [
     "amp",
-    "antigravity",
-    "antigravity-cli",
     "cline",
     "codex",
     "cursor",
-    "deepagents",
+    "droid",
+    "fx",
     "gemini-cli",
     "github-copilot",
+    "kilo",
     "kimi-code-cli",
     "opencode",
+    "pi",
     "warp",
     "zed",
     "claude-code",
-    "pi",
     "trae",
     "openclaw"
   ]
