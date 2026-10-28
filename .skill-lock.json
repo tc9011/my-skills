@@ -774,6 +774,25 @@
       "skillFolderHash": "4da0082a6b5bfe3af46c0ea5ab5afbff59479749",
       "installedAt": "2026-10-27T08:27:08.078Z",
       "updatedAt": "2026-10-27T08:27:08.078Z"
+    },
+    "flyai": {
+      "source": "alibaba-flyai/flyai-skill",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/alibaba-flyai/flyai-skill.git",
+      "skillPath": "skills/flyai/SKILL.md",
+      "skillFolderHash": "1063de6a31e5837f204131aaa4af95a3cb97ebaf",
+      "installedAt": "2026-10-28T12:53:16.014Z",
+      "updatedAt": "2026-10-28T12:53:16.014Z"
+    },
+    "agently-mail": {
+      "source": "agent.qq.com",
+      "sourceType": "well-known",
+      "sourceUrl": "https://agent.qq.com/.well-known/skills/agently-mail/SKILL.md",
+      "skillFolderHash": "",
+      "sourceBaseUrl": "https://agent.qq.com",
+      "wellKnownDigest": "sha256:6edfddacd3f147ae246c30bd8deb4dd4be6e94f06c0eccb804a2d84ac4295b54",
+      "installedAt": "2026-10-28T13:46:52.090Z",
+      "updatedAt": "2026-10-28T13:51:07.742Z"
     }
   },
   "dismissed": {
@@ -796,6 +815,7 @@
     "zed",
     "claude-code",
     "trae",
-    "openclaw"
+    "openclaw",
+    "hermes-agent"
   ]
 }
