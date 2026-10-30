@@ -17,21 +17,23 @@ Uploads files through Rome's own API (`<rome>/api/file/upload` → OSS → `<rom
    - Tell the user a browser window will open for Rome SSO, then run `rome-upload login` (it waits up to 5 minutes for the user to finish logging in).
    - Login receives the SSO callback on `localhost:3000`; if it reports the port is in use, ask the user to stop whatever runs there (usually a local Rome dev server) first.
    - Never ask the user for passwords or tokens, and never read or print `~/.config/rome-upload/credentials.json`.
+4. Network: uploads need the company VPN, GlobalProtect connected to the **"Jiaxing - All Traffic"** gateway (not the plain "Jiaxing" one). Login and `whoami` work without it. No need to mention it before every upload: when the VPN is off, the CLI fails within about 10 seconds with `cannot reach Rome` (see Troubleshooting).
 
 ## Usage
 
-Always use `--json` so results are machine-readable:
+Always use `--json` so results are machine-readable, and decide `--compress` per [Compression](#compression):
 
 ```bash
-rome-upload ./banner.png ./logo.webp --json
-rome-upload ./hero.jpg --ns Douyin --compress --json
+rome-upload ./banner.png ./logo.webp --compress --json
+rome-upload ./hero.jpg ./intro.mp4 --ns Douyin --compress --json
+rome-upload ./icon.svg ./loading.gif --json
 ```
 
 | Option | Meaning |
 |---|---|
 | `--ns TMail\|Douyin\|WeChat\|Other` | Namespace (default from config). Pick from the user's context; ask if unclear and it matters. |
 | `--cloud jushita\|aliyun` | Storage provider (default from config) |
-| `--compress` | Compress JPEG/PNG/WebP first (quality 80, max 1920px). Only when the user asks to compress/optimize. |
+| `--compress` | Compress JPEG/PNG/WebP first (quality 80, fit within 1920px); other files upload unchanged. See [Compression](#compression). |
 | `--private` | Non-public upload. Only when explicitly requested. |
 
 Output (`--json`) is an array; exit code `1` if any file failed:
@@ -40,7 +42,18 @@ Output (`--json`) is an array; exit code `1` if any file failed:
 [{ "file": "./banner.png", "ok": true, "url": "https://...", "size": 12345, "exists": false }]
 ```
 
-`exists: true` means the same file was already uploaded and its existing URL was returned. With `--compress`, `originalSize` shows the size before compression.
+`exists: true` means the same file was already uploaded and its existing URL was returned. `originalSize` (size before compression) is present only when a compressed version was uploaded.
+
+## Compression
+
+Decide by file extension:
+
+- Any `.jpg` / `.jpeg` / `.png` / `.webp` in the batch → add `--compress`. The CLI compresses only these types and uploads every other file in the same command unchanged, so a mixed batch is still one command.
+- No such files (`.gif`, `.svg`, `.ico`, `.avif`, video, fonts, PDF, …) → no `--compress`.
+- Skip `--compress` when the user wants the original, no compression, lossless or full resolution (原图、不压缩、无损、高清), or the image must stay larger than 1920px (e.g. @2x/@3x assets, print): compression fits images within 1920×1920.
+- No need to check for animated or already-optimized images yourself: the CLI uploads those unchanged.
+- Report the result: with `originalSize`, say the file was compressed (`originalSize` → `size` bytes); without it, the file was uploaded as-is.
+- `sharp is not installed` → rerun those files without `--compress` and tell the user they were uploaded uncompressed.
 
 ## Rules
 
@@ -55,7 +68,7 @@ Output (`--json`) is an array; exit code `1` if any file failed:
 | `not configured` | See Prerequisites step 2 |
 | `not logged in or session expired` / `unauthorized (401)` | See Prerequisites step 3 |
 | `localhost:3000 is in use` | Ask the user to stop the process on port 3000, then `rome-upload login` again |
-| `fetch failed` / timeout | Rome may only be reachable from the corporate network/VPN; ask the user to check connectivity to the Rome URL |
+| `cannot reach Rome` / `fetch failed` | The VPN is off or on another gateway: ask the user to connect GlobalProtect to "Jiaxing - All Traffic" and tell you when done, then retry once. Don't work around it with other networks, proxies or URLs |
 | `/api/file/upload failed: <msg>` | Service rejected the request; relay `<msg>` (often bad namespace/cloud) |
 | `Part N upload HTTP 4xx` | Pre-signed URL expired or rejected; retry once, then report |
-| `sharp is not installed` | Drop `--compress`, or install `sharp` alongside the CLI |
+| `sharp is not installed` | Rerun without `--compress` and tell the user the files were uploaded uncompressed |
