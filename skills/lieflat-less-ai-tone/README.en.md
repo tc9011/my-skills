@@ -2,7 +2,9 @@
 
 [中文](README.md) | English
 
-**A post-draft Chinese writing skill built from two rounds of comparison: 629 articles in the first round, 270 matched pairs in the second, about 5.2 million Chinese characters in total, and about 431,000 model semantic judgments.** It reports what it found, cites passages from your draft, and proposes specific edits. It rewrites only after you respond, then runs a second check and shows the changes.
+![Lieflat Less AI Tone: 5.2M characters, 100+ measures, approximately 500K model semantic judgments](assets/less-ai-tone-hero-en.png)
+
+**A post-draft Chinese writing skill built from two rounds of comparison: 629 articles in the first round, 270 matched pairs in the second, about 5.2 million Chinese characters in total, and about 500,000 model semantic judgments.** It reports what it found, cites passages from your draft, and proposes specific edits. It rewrites only after you respond, then runs a second check and shows the changes.
 
 ## What the study measured
 
@@ -13,14 +15,14 @@ Three methods handled different kinds of evidence:
 | Method | What it measured | Scope |
 |---|---|---|
 | Scripts | Punctuation, sentence and section structure, lexical measures, and other countable features | 90 measures across all 540 second-round articles |
-| Model semantic assessment | Whether a candidate passage meets a narrowly defined semantic criterion | About 431,000 judgments during the study, using Jev |
+| Model semantic assessment | Whether a candidate passage meets a narrowly defined semantic criterion | About 500,000 judgments during the study (431,000 in round two plus about 110,000 in a supplementary round), using Jev |
 | Human review | Metaphor aptness and errors in machine judgments | Sentence-level annotation and sample checks |
 
-The 431,000 judgments describe the **research**, not the number of model calls required to check one new draft. In ordinary use, the skill's scripts extract candidates and the current conversation model assesses them against the closed criteria in [references/semantic-criteria.md](./references/semantic-criteria.md).
+The 500,000 judgments describe the **research**, not the number of model calls required to check one new draft. In ordinary use, the skill's scripts extract candidates and the current conversation model assesses them against the closed criteria in [references/semantic-criteria.md](./references/semantic-criteria.md).
 
 ## What changed after the matched-pair test
 
-The second round overturned several plausible editing rules. Numbered subheadings were more common on the human side in the matched sample. “This means” style restatements and introductory lines before lists also failed as general deletion rules. A first-round suggestion to restore concrete detail was later withdrawn: a symmetric semantic check found passages becoming more vague in 24.7% of comparisons and more specific in 26.0%, a near-zero net difference. These items are reported as rejected indicators and are **never edited merely because they appear**.
+The second round overturned several plausible editing rules. “This means” style restatements and introductory lines before lists also failed as general deletion rules. A first-round suggestion to restore concrete detail was later withdrawn: a symmetric semantic check found passages becoming more vague in 24.7% of comparisons and more specific in 26.0%, a near-zero net difference. These items are reported as weak or rejected indicators and are **never edited merely because they appear**.
 
 Model-specific habits also matter. The em-dash result points in opposite directions for GPT-5.6 and Opus 4.6: GPT used fewer than the human comparison, while Opus used more. A pooled “AI uses too many dashes” rule would hide both results. The skill reports such features as model fingerprints rather than treating them as universal defects.
 
