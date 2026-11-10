@@ -793,6 +793,15 @@
       "wellKnownDigest": "sha256:6edfddacd3f147ae246c30bd8deb4dd4be6e94f06c0eccb804a2d84ac4295b54",
       "installedAt": "2026-10-28T13:46:52.090Z",
       "updatedAt": "2026-10-28T13:51:07.742Z"
+    },
+    "app-store-screenshots": {
+      "source": "ParthJadhav/app-store-screenshots",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/ParthJadhav/app-store-screenshots.git",
+      "skillPath": "skills/app-store-screenshots/SKILL.md",
+      "skillFolderHash": "6030abe658948a09defb137601ef74ed4eef6d73",
+      "installedAt": "2026-11-10T06:00:02.073Z",
+      "updatedAt": "2026-11-10T06:00:02.073Z"
     }
   },
   "dismissed": {
