@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>cover</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #02040a; }
+  #scene {
+    position: relative; width: 1920px; height: 1080px; overflow: hidden;
+    background:
+      radial-gradient(ellipse 1000px 640px at 960px 560px, rgba(29, 78, 216, 0.32), transparent 70%),
+      radial-gradient(ellipse 760px 520px at 180px 160px, rgba(124, 58, 237, 0.16), transparent 70%),
+      radial-gradient(ellipse 820px 520px at 1760px 940px, rgba(8, 145, 178, 0.16), transparent 70%),
+      linear-gradient(180deg, #070d1f 0%, #050a18 55%, #03060f 100%);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+  }
+  #floor { position: absolute; left: 0; top: 0; }
+  #overlay { position: absolute; inset: 0; }
+  .panel {
+    position: absolute; box-sizing: border-box; border-radius: 16px; padding: 12px 14px 14px;
+    background: linear-gradient(160deg, rgba(56, 189, 248, 0.22), rgba(15, 23, 42, 0.58) 55%, rgba(30, 27, 75, 0.5));
+    border: 1px solid rgba(125, 211, 252, 0.6);
+    box-shadow: 0 0 30px rgba(34, 211, 238, 0.32), inset 0 0 18px rgba(56, 189, 248, 0.16), 0 24px 60px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(6px);
+  }
+  .panel .head {
+    display: flex; align-items: center; gap: 9px;
+    font-size: 15px; font-weight: 700; letter-spacing: 0.22em; color: #cffafe;
+    text-shadow: 0 0 10px rgba(34, 211, 238, 0.85);
+  }
+  .panel .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .panel svg { display: block; margin-top: 10px; }
+  .beam {
+    position: absolute; width: 2px;
+    background: linear-gradient(to top, rgba(103, 232, 249, 0.95), rgba(34, 211, 238, 0.25));
+    box-shadow: 0 0 10px rgba(34, 211, 238, 0.9);
+  }
+  .term {
+    position: absolute; box-sizing: border-box; border-radius: 12px; padding: 12px 16px 14px;
+    background: rgba(8, 13, 28, 0.8); border: 1px solid rgba(96, 165, 250, 0.35);
+    box-shadow: 0 0 26px rgba(59, 130, 246, 0.2);
+    font-family: "SF Mono", Menlo, Monaco, monospace; font-size: 13px; line-height: 1.62; color: #93c5fd;
+    white-space: pre;
+  }
+  .term .bar { display: flex; gap: 6px; margin-bottom: 8px; }
+  .term .bar i { width: 9px; height: 9px; border-radius: 50%; display: block; }
+  .bloom {
+    position: absolute; left: 560px; top: 260px; width: 800px; height: 560px; border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(34, 211, 238, 0.16), rgba(34, 211, 238, 0) 100%);
+    mix-blend-mode: screen; pointer-events: none;
+  }
+  .vignette {
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 75% 72% at 50% 52%, transparent 55%, rgba(1, 3, 9, 0.62) 100%);
+  }
+</style>
+</head>
+<body>
+<div id="scene">
+  <svg id="floor" width="1920" height="1080" viewBox="0 0 1920 1080"></svg>
+  <div id="overlay"></div>
+  <div class="vignette"></div>
+</div>
+<script>
+// Cover template for blog-to-wechat-pipeline (Phase 4, "Code-rendered cover").
+// Change per article:
+// - `stations`: one entry per stage on the ring (angle in degrees: 180 left, 270 back, 0 right, 90 front)
+// - the arc list under "loop track": one arc per edge between stations, plus its colour
+// - `panelHTML` and the panel drawings (`kanban`, `gitGraph`, `releaseBox`): the glass panel above each station
+// - the `.term` cards at the end: short code or status snippets in the corners
+// - the chip icon (`icon`, `spark`)
+// Layout knobs: TH (tilt), D (perspective), CX/CY (floor centre), OX/OY (vanishing point), R (ring radius),
+// `lift` / `shift` (panel offset from its station). Keep text to a few short English words.
+const TH = 64 * Math.PI / 180
+const COS = Math.cos(TH)
+const SIN = Math.sin(TH)
+const D = 2600
+const CX = 960
+const CY = 575
+const OX = 960
+const OY = 310
+const R = 540
+
+function P(X, Y, Z = 0) {
+  const yp = Y * COS - Z * SIN
+  const zp = Y * SIN + Z * COS
+  const s = D / (D - zp)
+  return [OX + (CX + X - OX) * s, OY + (CY + yp - OY) * s, s]
+}
+
+const NS = 'http://www.w3.org/2000/svg'
+const floor = document.getElementById('floor')
+function el(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag)
+  for (const k in attrs) e.setAttribute(k, attrs[k])
+  ;(parent || floor).appendChild(e)
+  return e
+}
+const f1 = n => n.toFixed(1)
+const toPts = arr => arr.map(p => f1(p[0]) + ',' + f1(p[1])).join(' ')
+const toPath = (arr, close) => 'M' + arr.map(p => f1(p[0]) + ' ' + f1(p[1])).join(' L') + (close ? ' Z' : '')
+const rad = a => a * Math.PI / 180
+
+function arcPts(r, a0, a1, Z = 0, step = 1, cx = 0, cy = 0) {
+  const out = []
+  const n = Math.max(2, Math.ceil(Math.abs(a1 - a0) / step))
+  for (let i = 0; i <= n; i++) {
+    const a = rad(a0 + (a1 - a0) * i / n)
+    out.push(P(cx + r * Math.cos(a), cy + r * Math.sin(a), Z))
+  }
+  return out
+}
+function bandPath(r1, r2, a0, a1) {
+  return toPath(arcPts(r2, a0, a1).concat(arcPts(r1, a0, a1).reverse()), true)
+}
+function mulberry32(a) {
+  return function () {
+    a |= 0; a = a + 0x6D2B79F5 | 0
+    let t = Math.imul(a ^ a >>> 15, 1 | a)
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t
+    return ((t ^ t >>> 14) >>> 0) / 4294967296
+  }
+}
+const rnd = mulberry32(20261121)
+
+el('defs', {}).innerHTML = `
+  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="b1"/>
+    <feGaussianBlur in="SourceGraphic" stdDeviation="11" result="b2"/>
+    <feMerge><feMergeNode in="b2"/><feMergeNode in="b1"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="glowSoft" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur in="SourceGraphic" stdDeviation="2.2" result="b1"/>
+    <feMerge><feMergeNode in="b1"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="blur18" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="18"/></filter>
+  <radialGradient id="fade" gradientUnits="userSpaceOnUse" cx="960" cy="575" r="1000">
+    <stop offset="0" stop-color="#fff"/>
+    <stop offset="0.55" stop-color="#fff" stop-opacity="0.5"/>
+    <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+  </radialGradient>
+  <mask id="fadeMask" maskUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080">
+    <rect width="1920" height="1080" fill="url(#fade)"/>
+  </mask>
+  <linearGradient id="gA" gradientUnits="userSpaceOnUse" x1="420" y1="575" x2="960" y2="334">
+    <stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#3b82f6"/>
+  </linearGradient>
+  <linearGradient id="gB" gradientUnits="userSpaceOnUse" x1="960" y1="334" x2="1500" y2="575">
+    <stop offset="0" stop-color="#3b82f6"/><stop offset="1" stop-color="#a78bfa"/>
+  </linearGradient>
+  <linearGradient id="gC" gradientUnits="userSpaceOnUse" x1="1500" y1="575" x2="420" y2="575">
+    <stop offset="0" stop-color="#fbbf24"/><stop offset="1" stop-color="#f59e0b"/>
+  </linearGradient>
+  <radialGradient id="pool" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#22d3ee" stop-opacity="0.42"/>
+    <stop offset="0.45" stop-color="#2563eb" stop-opacity="0.16"/>
+    <stop offset="1" stop-color="#2563eb" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="chipTop" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#2a3a5c"/><stop offset="0.45" stop-color="#0f1a30"/><stop offset="1" stop-color="#050a16"/>
+  </linearGradient>
+  <linearGradient id="chipFront" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#18264a"/><stop offset="1" stop-color="#04070f"/>
+  </linearGradient>
+  <linearGradient id="pin" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#e2e8f0"/><stop offset="1" stop-color="#64748b"/>
+  </linearGradient>
+`
+
+// floor grid
+const grid = el('g', { 'mask': 'url(#fadeMask)', 'stroke': 'rgba(56, 189, 248, 0.15)', 'stroke-width': '1' })
+for (let v = -2160; v <= 2160; v += 90) {
+  const a = P(v, -2000)
+  const b = P(v, 1400)
+  el('line', { x1: f1(a[0]), y1: f1(a[1]), x2: f1(b[0]), y2: f1(b[1]) }, grid)
+}
+for (let v = -1980; v <= 1400; v += 90) {
+  const a = P(-3000, v)
+  const b = P(3000, v)
+  el('line', { x1: f1(a[0]), y1: f1(a[1]), x2: f1(b[0]), y2: f1(b[1]) }, grid)
+}
+
+// light pool under the chip
+el('path', { d: toPath(arcPts(460, 0, 360, 0, 4), true), fill: 'url(#pool)' })
+el('path', { d: toPath(arcPts(230, 0, 360, 0, 4), true), fill: 'rgba(34, 211, 238, 0.28)', filter: 'url(#blur18)' })
+
+// outer rings with ticks
+el('path', { 'd': toPath(arcPts(960, 0, 360), true), 'fill': 'none', 'stroke': 'rgba(167, 139, 250, 0.24)', 'stroke-width': '1.2', 'stroke-dasharray': '2 10' })
+el('path', { 'd': toPath(arcPts(760, 0, 360), true), 'fill': 'none', 'stroke': 'rgba(56, 189, 248, 0.38)', 'stroke-width': '1.4' })
+const ticks = el('g', { 'stroke': 'rgba(125, 211, 252, 0.45)', 'stroke-width': '1.2' })
+for (let a = 0; a < 360; a += 4) {
+  const r2 = a % 28 === 0 ? 802 : 778
+  const p1 = P(760 * Math.cos(rad(a)), 760 * Math.sin(rad(a)))
+  const p2 = P(r2 * Math.cos(rad(a)), r2 * Math.sin(rad(a)))
+  el('line', { x1: f1(p1[0]), y1: f1(p1[1]), x2: f1(p2[0]), y2: f1(p2[1]) }, ticks)
+}
+el('path', { 'd': toPath(arcPts(330, 0, 360, 0, 2), true), 'fill': 'none', 'stroke': 'rgba(34, 211, 238, 0.35)', 'stroke-width': '1.2', 'stroke-dasharray': '6 8' })
+
+// circuit traces from the chip
+const HALF = 150
+const traces = el('g', { 'fill': 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'filter': 'url(#glowSoft)' })
+const tracePalette = ['rgba(56, 189, 248, 0.55)', 'rgba(56, 189, 248, 0.55)', 'rgba(96, 165, 250, 0.5)', 'rgba(167, 139, 250, 0.55)', 'rgba(245, 158, 11, 0.55)']
+for (const [nx, ny] of [[0, -1], [0, 1], [-1, 0], [1, 0]]) {
+  for (let i = 0; i < 9; i++) {
+    const t = -HALF + 22 + i * ((2 * HALF - 44) / 8)
+    let x = nx ? nx * (HALF + 30) : t
+    let y = ny ? ny * (HALF + 30) : t
+    const pts = [[x, y]]
+    const l1 = 30 + rnd() * 110
+    x += nx * l1
+    y += ny * l1
+    pts.push([x, y])
+    const dir = rnd() < 0.5 ? -1 : 1
+    const l2 = 20 + rnd() * 70
+    x += nx * l2 + (ny ? dir * l2 : 0)
+    y += ny * l2 + (nx ? dir * l2 : 0)
+    pts.push([x, y])
+    const l3raw = rnd() < 0.3 ? 420 + rnd() * 380 : 60 + rnd() * 180
+    const l3 = nx ? Math.max(20, Math.min(l3raw, R - 80 - Math.abs(x))) : l3raw
+    x += nx * l3
+    y += ny * l3
+    pts.push([x, y])
+    const color = tracePalette[Math.floor(rnd() * tracePalette.length)]
+    const pp = pts.map(p => P(p[0], p[1]))
+    el('polyline', { 'points': toPts(pp), 'stroke': color, 'stroke-width': '1.6' }, traces)
+    const e = pp[pp.length - 1]
+    el('circle', { 'cx': f1(e[0]), 'cy': f1(e[1]), 'r': f1(3.4 * e[2]), 'stroke': color, 'stroke-width': '1.4', 'fill': '#050a16' }, traces)
+  }
+}
+
+// loop track
+el('path', {
+  'd': toPath(arcPts(R + 30, 0, 360), true) + ' ' + toPath(arcPts(R - 30, 0, 360), true),
+  'fill-rule': 'evenodd',
+  'fill': 'rgba(30, 64, 175, 0.16)',
+  'stroke': 'rgba(56, 189, 248, 0.22)',
+  'stroke-width': '1',
+})
+const GAP = 11
+for (const arc of [
+  { a0: 180, a1: 270, fill: 'url(#gA)', head: '#fbbf24', w: 8 },
+  { a0: 270, a1: 360, fill: 'url(#gB)', head: '#fbbf24', w: 8 },
+  { a0: 0, a1: 180, fill: 'url(#gC)', head: '#fff7d6', w: 5.5 },
+]) {
+  const s0 = arc.a0 + GAP
+  const s1 = arc.a1 - GAP - 5
+  const g = el('g', { filter: 'url(#glow)' })
+  el('path', { d: bandPath(R - arc.w, R + arc.w, s0, s1), fill: arc.fill }, g)
+  el('polyline', { 'points': toPts(arcPts(R, s0, s1)), 'fill': 'none', 'stroke': 'rgba(255, 255, 255, 0.75)', 'stroke-width': '1.6' }, g)
+  const head = [
+    P(R * Math.cos(rad(s1 + 6)), R * Math.sin(rad(s1 + 6))),
+    P((R + 21) * Math.cos(rad(s1)), (R + 21) * Math.sin(rad(s1))),
+    P((R - 21) * Math.cos(rad(s1)), (R - 21) * Math.sin(rad(s1))),
+  ]
+  el('polygon', { points: toPts(head), fill: arc.head }, g)
+}
+const packets = el('g', { filter: 'url(#glowSoft)' })
+for (const [a, col] of [[226, '#e0f2fe'], [318, '#ede9fe'], [58, '#fff7d6'], [126, '#fff7d6']]) {
+  for (let k = 0; k < 7; k++) {
+    const p = P(R * Math.cos(rad(a - k * 2.2)), R * Math.sin(rad(a - k * 2.2)))
+    el('circle', { cx: f1(p[0]), cy: f1(p[1]), r: f1((3.8 - k * 0.42) * p[2]), fill: col, opacity: f1(1 - k * 0.13) }, packets)
+  }
+}
+
+// station pads
+const stations = [
+  { id: 'feedback', a: 180 },
+  { id: 'iteration', a: 270 },
+  { id: 'release', a: 0 },
+]
+for (const st of stations) {
+  const cx = R * Math.cos(rad(st.a))
+  const cy = R * Math.sin(rad(st.a))
+  const g = el('g', { filter: 'url(#glow)' })
+  el('path', { 'd': toPath(arcPts(58, 0, 360, 0, 8, cx, cy), true), 'fill': 'none', 'stroke': 'rgba(34, 211, 238, 0.38)', 'stroke-width': '1.2' }, g)
+  el('path', { 'd': toPath(arcPts(36, 0, 360, 0, 8, cx, cy), true), 'fill': 'rgba(8, 47, 73, 0.9)', 'stroke': '#22d3ee', 'stroke-width': '2.4' }, g)
+  el('path', { d: toPath(arcPts(13, 0, 360, 0, 12, cx, cy), true), fill: '#cffafe' }, g)
+  st.screen = P(cx, cy)
+}
+
+// chip
+const TOPZ = 56
+const RR = 26
+function rrect(h, r, Z, steps = 8) {
+  const out = []
+  const cs = [[h - r, h - r, 0, 90], [-h + r, h - r, 90, 180], [-h + r, -h + r, 180, 270], [h - r, -h + r, 270, 360]]
+  for (const [cx, cy, a0, a1] of cs) {
+    for (let k = 0; k <= steps; k++) {
+      const a = rad(a0 + (a1 - a0) * k / steps)
+      out.push(P(cx + r * Math.cos(a), cy + r * Math.sin(a), Z))
+    }
+  }
+  return out
+}
+const pinsBack = el('g', {})
+const topPts = rrect(HALF, RR, TOPZ)
+const basePts = rrect(HALF, RR, 0)
+const nFront = 2 * 9
+el('path', { 'd': toPath(topPts.slice(0, nFront).concat(basePts.slice(0, nFront).reverse()), true), 'fill': 'url(#chipFront)', 'stroke': 'rgba(56, 189, 248, 0.4)', 'stroke-width': '1' })
+el('polyline', { 'points': toPts(basePts.slice(0, nFront)), 'fill': 'none', 'stroke': '#22d3ee', 'stroke-width': '2', 'filter': 'url(#glow)' })
+el('path', { 'd': toPath(topPts, true), 'fill': 'url(#chipTop)', 'stroke': 'rgba(103, 232, 249, 0.95)', 'stroke-width': '2', 'filter': 'url(#glowSoft)' })
+const wires = el('g', { 'stroke': 'rgba(56, 189, 248, 0.38)', 'stroke-width': '1.2' })
+for (let i = 0; i < 7; i++) {
+  const t = -78 + i * 26
+  for (const [a, b] of [[[t, -100], [t, -138]], [[t, 100], [t, 138]], [[-100, t], [-138, t]], [[100, t], [138, t]]]) {
+    const p1 = P(a[0], a[1], TOPZ)
+    const p2 = P(b[0], b[1], TOPZ)
+    el('line', { x1: f1(p1[0]), y1: f1(p1[1]), x2: f1(p2[0]), y2: f1(p2[1]) }, wires)
+  }
+}
+el('path', { 'd': toPath(rrect(98, 16, TOPZ), true), 'fill': '#081428', 'stroke': 'rgba(34, 211, 238, 0.6)', 'stroke-width': '1.5' })
+const icon = el('g', { 'filter': 'url(#glow)', 'fill': 'none', 'stroke': '#67e8f9', 'stroke-linecap': 'round' })
+const IR = 54
+for (const [a0, a1] of [[200, 322], [20, 142]]) {
+  el('polyline', { 'points': toPts(arcPts(IR, a0, a1, TOPZ, 3)), 'stroke-width': '7' }, icon)
+  const head = [
+    P(IR * Math.cos(rad(a1 + 18)), IR * Math.sin(rad(a1 + 18)), TOPZ),
+    P((IR + 16) * Math.cos(rad(a1)), (IR + 16) * Math.sin(rad(a1)), TOPZ),
+    P((IR - 16) * Math.cos(rad(a1)), (IR - 16) * Math.sin(rad(a1)), TOPZ),
+  ]
+  el('polygon', { points: toPts(head), fill: '#67e8f9', stroke: 'none' }, icon)
+}
+const spark = []
+for (let k = 0; k < 8; k++) {
+  const r = k % 2 === 0 ? 24 : 6
+  const a = rad(-90 + k * 45)
+  spark.push(P(r * Math.cos(a), r * Math.sin(a), TOPZ))
+}
+el('polygon', { points: toPts(spark), fill: '#fbbf24', filter: 'url(#glow)' })
+const pinsFront = el('g', {})
+for (const [nx, ny] of [[0, -1], [0, 1], [-1, 0], [1, 0]]) {
+  for (let i = 0; i < 9; i++) {
+    const t = -HALF + 22 + i * ((2 * HALF - 44) / 8)
+    const w = 5
+    const quad = ny
+      ? [[t - w, ny * (HALF + 4)], [t + w, ny * (HALF + 4)], [t + w, ny * (HALF + 28)], [t - w, ny * (HALF + 28)]]
+      : [[nx * (HALF + 4), t - w], [nx * (HALF + 4), t + w], [nx * (HALF + 28), t + w], [nx * (HALF + 28), t - w]]
+    el('polygon', { points: toPts(quad.map(q => P(q[0], q[1], 3))), fill: 'url(#pin)', opacity: '0.9' }, ny === 1 ? pinsFront : pinsBack)
+  }
+}
+
+// overlay: bloom, bokeh, beams, panels, side cards
+const overlay = document.getElementById('overlay')
+const add = html => overlay.insertAdjacentHTML('beforeend', html)
+add('<div class="bloom"></div>')
+
+const bokehColors = ['34, 211, 238', '59, 130, 246', '167, 139, 250', '245, 158, 11', '125, 211, 252']
+let bokeh = ''
+for (let i = 0; i < 80; i++) {
+  const x = rnd() * 1920
+  const y = rnd() * 1080
+  const dx = (x - 960) / 780
+  const dy = (y - 575) / 380
+  if (dx * dx + dy * dy < 1)
+    continue
+  const size = 2 + rnd() * (rnd() < 0.2 ? 10 : 4)
+  const c = bokehColors[Math.floor(rnd() * bokehColors.length)]
+  const op = (0.25 + rnd() * 0.6).toFixed(2)
+  const blur = size > 7 ? 2.5 : 0
+  bokeh += `<i style="position:absolute;left:${x.toFixed(0)}px;top:${y.toFixed(0)}px;width:${size.toFixed(1)}px;height:${size.toFixed(1)}px;border-radius:50%;background:rgba(${c},${op});box-shadow:0 0 ${(size * 2.5).toFixed(0)}px rgba(${c},${op});filter:blur(${blur}px)"></i>`
+}
+add(bokeh)
+
+const glowFilter = id => `<defs><filter id="${id}" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>`
+const head = (label, color) => `<div class="head"><span class="dot" style="background:${color};box-shadow:0 0 10px ${color}"></span>${label}</div>`
+
+function kanban() {
+  let s = glowFilter('pg1')
+  const cols = [
+    { x: 0, w: 38, cards: [['rgba(59,130,246,0.55)', 0], ['#f59e0b', 1], ['rgba(59,130,246,0.35)', 0]] },
+    { x: 94, w: 30, cards: [['rgba(34,211,238,0.55)', 0], ['rgba(34,211,238,0.32)', 0]] },
+    { x: 188, w: 24, cards: [['rgba(167,139,250,0.5)', 2], ['rgba(167,139,250,0.32)', 2]] },
+  ]
+  for (const col of cols) {
+    s += `<rect x="${col.x}" y="0" width="84" height="122" rx="9" fill="rgba(2,6,23,0.45)" stroke="rgba(125,211,252,0.28)"/>`
+    s += `<rect x="${col.x + 10}" y="10" width="${col.w}" height="5" rx="2.5" fill="rgba(165,243,252,0.75)"/>`
+    col.cards.forEach(([fill, kind], i) => {
+      const y = 24 + i * 30
+      const f = kind === 1 ? ' filter="url(#pg1)"' : ''
+      s += `<rect x="${col.x + 8}" y="${y}" width="68" height="24" rx="6" fill="${fill}"${f}/>`
+      s += `<rect x="${col.x + 16}" y="${y + 10}" width="34" height="4" rx="2" fill="rgba(255,255,255,0.75)"/>`
+      if (kind === 2)
+        s += `<polyline points="${col.x + 57},${y + 12} ${col.x + 61},${y + 16} ${col.x + 68},${y + 8}" fill="none" stroke="#86efac" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`
+    })
+  }
+  return `<svg width="272" height="122" viewBox="0 0 272 122">${s}</svg>`
+}
+
+function gitGraph() {
+  return `<svg width="272" height="122" viewBox="0 0 272 122">${glowFilter('pg2')}
+    <line x1="14" y1="96" x2="258" y2="96" stroke="#60a5fa" stroke-width="3" stroke-linecap="round"/>
+    <path d="M 30 96 C 54 96, 54 58, 78 58 L 160 58 C 184 58, 186 96, 208 96" fill="none" stroke="#a78bfa" stroke-width="3"/>
+    <path d="M 148 50 C 140 22, 96 22, 89 44" fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-dasharray="3 5" stroke-linecap="round" filter="url(#pg2)"/>
+    <polygon points="88,51 94.5,42.5 84.5,40.5" fill="#f59e0b"/>
+    <circle cx="30" cy="96" r="8" fill="#0b1220" stroke="#60a5fa" stroke-width="3"/>
+    <circle cx="250" cy="96" r="8" fill="#0b1220" stroke="#60a5fa" stroke-width="3"/>
+    <circle cx="88" cy="58" r="8" fill="#0b1220" stroke="#a78bfa" stroke-width="3"/>
+    <circle cx="148" cy="58" r="8" fill="#0b1220" stroke="#a78bfa" stroke-width="3"/>
+    <circle cx="208" cy="96" r="9" fill="#0b1220" stroke="#22c55e" stroke-width="3" filter="url(#pg2)"/>
+    <g filter="url(#pg2)">
+      <rect x="170" y="14" width="86" height="28" rx="14" fill="rgba(34,197,94,0.18)" stroke="#22c55e" stroke-width="1.5"/>
+      <polyline points="183,28 189,34 199,22" fill="none" stroke="#86efac" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="207" y="33" font-size="14" font-weight="700" fill="#bbf7d0" letter-spacing="1">PASS</text>
+    </g>
+  </svg>`
+}
+
+function releaseBox() {
+  return `<svg width="272" height="122" viewBox="0 0 272 122">${glowFilter('pg3')}
+    <g transform="translate(36 26)">
+      <polygon points="0,26 44,6 88,26 44,46" fill="rgba(125,211,252,0.3)" stroke="#7dd3fc" stroke-width="1.6"/>
+      <polygon points="0,26 44,46 44,92 0,72" fill="rgba(37,99,235,0.45)" stroke="#60a5fa" stroke-width="1.6"/>
+      <polygon points="44,46 88,26 88,72 44,92" fill="rgba(29,78,216,0.3)" stroke="#60a5fa" stroke-width="1.6"/>
+      <polyline points="22,16 66,36 66,48" fill="none" stroke="#bae6fd" stroke-width="1.6"/>
+    </g>
+    <g filter="url(#pg3)">
+      <line x1="80" y1="28" x2="80" y2="8" stroke="#fbbf24" stroke-width="4" stroke-linecap="round"/>
+      <polygon points="80,0 71,12 89,12" fill="#fbbf24"/>
+    </g>
+    <g filter="url(#pg3)">
+      <rect x="150" y="40" width="84" height="30" rx="8" fill="rgba(245,158,11,0.16)" stroke="#fbbf24" stroke-width="1.5"/>
+      <circle cx="162" cy="55" r="3" fill="#fbbf24"/>
+    </g>
+    <text x="172" y="60" font-family="SF Mono, Menlo, monospace" font-size="14" font-weight="700" fill="#fde68a">v1.0.0</text>
+    <rect x="150" y="84" width="70" height="5" rx="2.5" fill="rgba(165,243,252,0.55)"/>
+    <rect x="150" y="98" width="52" height="5" rx="2.5" fill="rgba(165,243,252,0.35)"/>
+  </svg>`
+}
+
+const panelHTML = {
+  feedback: head('FEEDBACK', '#22d3ee') + kanban(),
+  iteration: head('ITERATION', '#a78bfa') + gitGraph(),
+  release: head('RELEASE', '#fbbf24') + releaseBox(),
+}
+const PW = 300
+const PH = 176
+const lift = { feedback: 56, iteration: 22, release: 56 }
+const shift = { feedback: -140, iteration: 0, release: 140 }
+for (const st of stations) {
+  const [sx, sy] = st.screen
+  const bottom = sy - lift[st.id]
+  add(`<div class="beam" style="left:${f1(sx - 1)}px;top:${f1(bottom)}px;height:${f1(sy - bottom)}px"></div>`)
+  add(`<div class="panel" style="left:${f1(sx + shift[st.id] - PW / 2)}px;top:${f1(bottom - PH)}px;width:${PW}px;height:${PH}px">${panelHTML[st.id]}</div>`)
+}
+
+const bar = '<div class="bar"><i style="background:#f87171"></i><i style="background:#fbbf24"></i><i style="background:#4ade80"></i></div>'
+const k = s => `<span style="color:#c4b5fd">${s}</span>`
+const ok = '<span style="color:#86efac">✓</span>'
+add(`<div class="term" style="left:64px;top:92px;width:330px;transform:rotate(-1.5deg);filter:blur(0.4px);opacity:0.85">${bar}<span style="color:#67e8f9">$</span> gh pr create --fill
+<span style="color:#94a3b8">  Refs #42</span>
+${ok} lint  ${ok} test  ${ok} build
+<span style="color:#fbbf24">→ merged</span></div>`)
+add(`<div class="term" style="left:1540px;top:104px;width:316px;transform:rotate(1.5deg);filter:blur(0.4px);opacity:0.85">${bar}<span style="color:#4ade80">●</span> #41  Done
+<span style="color:#a78bfa">●</span> #42  In review
+<span style="color:#64748b">○</span> #43  Todo</div>`)
+add(`<div class="term" style="left:1536px;top:790px;width:320px;transform:rotate(1.5deg);filter:blur(0.4px);opacity:0.85">${bar}${k('on')}:
+  ${k('push')}:
+    ${k('tags')}: [<span style="color:#fde68a">'v*'</span>]
+${k('jobs')}:
+  ${k('release')}:
+    ${k('runs-on')}: ubuntu-latest</div>`)
+add(`<div class="term" style="left:64px;top:820px;width:330px;transform:rotate(-1.5deg);filter:blur(0.4px);opacity:0.85">${bar}<span style="color:#22d3ee">●</span> Issue #42
+<span style="color:#94a3b8">  steps · expected · actual</span>
+<span style="color:#94a3b8">  found in </span><span style="color:#fde68a">v1.0.0</span></div>`)
+
+window.__stations = stations.map(s => ({ id: s.id, x: Math.round(s.screen[0]), y: Math.round(s.screen[1]) }))
+</script>
+</body>
+</html>

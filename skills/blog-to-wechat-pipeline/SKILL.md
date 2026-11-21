@@ -171,63 +171,76 @@ Follow the `wechat-md` SKILL.md workflow. Key steps:
 5. **Inject**: evaluate JS — fetch from local server + `focus()` + `selectAll` + `execCommand('insertText')`
    - The CodeMirror view API (`cmView.dispatch()`) is not accessible on this site — use `execCommand` which works through CodeMirror's native input handling
 6. **Verify**: snapshot — check first paragraph matches article
-7. **Copy**: click 复制 button (toast auto-dismisses, click success = copy success)
-8. **Clean**: kill HTTP server
+7. **Mermaid diagrams** (if any): widen clipped labels right before copying (lesson 9)
+8. **Copy**: click 复制 button (toast auto-dismisses, click success = copy success)
+9. **Diagram backups** (if any): export each mermaid diagram as a PNG next to the cover (lesson 10)
+10. **Clean**: kill HTTP server
 
 ### Phase 4: Cover image generation
 
 **Can run in parallel with Phase 3** — start the image generation while browser automation runs.
 
-#### Default dimensions (from baoyu-cover-image EXTEND.md)
+#### Default style (the user's published covers)
+
+The user's published covers share one look: a dark tech scene with neon glow, rendered in 3D. Match it unless the user asks otherwise.
 
 | Dimension | Value |
 |-----------|-------|
-| Type | conceptual |
-| Palette | cool |
-| Rendering | flat-vector |
-| Text | **none** (default: no text on cover) |
-| Mood | balanced |
-| Font | clean |
-| Aspect | 16:9 |
+| Type | conceptual — one hero object in the center (e.g., a glowing chip carrying the topic's symbol), with the article's key ideas as stations around it |
+| Palette | dark — deep navy to black; neon cyan and electric blue as the main glow; amber/orange for arrows and highlights; a little violet |
+| Rendering | digital — 3D isometric render from an elevated three-quarter view, cinematic lighting, bloom, glossy chips, frosted glass panels |
+| Text | no article title; a few short English UI labels are fine (e.g., `SKILL.md`, `PASS`, stage names) |
+| Mood | bold |
+| Aspect | 16:9, hero exactly centered, key elements inside the central band |
 | Watermark | disabled |
-| Language | zh |
+
+Recurring elements: circuit-board traces and a faint grid on the floor; loops drawn as glowing ring tracks or orbit rings with arrows; floating holographic cards with tiny code or markdown; small dark terminal panels near the edges, slightly out of focus.
 
 Override only the dimensions the user explicitly mentions. If user says "带标题" → `text: title-only`.
 
 #### Image generation methods (try in order)
 
-The generation method depends on what tools are available. Check in this order:
+Use a raster image model. Write the full prompt to `cover-image/<topic-slug>/prompts/NN-cover-<slug>.md` first (baoyu-cover-image rule), then:
 
-1. **`nano-banana-pro` skill** (if available and user hasn't excluded it):
+1. **Runtime-native image tool** (OpenCode: `experimental_image_generate`). It has no aspect-ratio parameter, so state the ratio in the prompt and check the output size with `sips -g pixelWidth -g pixelHeight`.
+2. **`nano-banana-pro` skill** (if installed):
    ```bash
    uv run <nano-banana-pro-skill>/scripts/generate_image.py \
      --prompt "<detailed visual description>" \
      --filename "<workspace>/cover-image/<topic-slug>/cover.png" \
      --resolution 1K
    ```
+3. **Codex CLI** (`codex-imagegen` in baoyu-cover-image), only when `codex login status` shows a login.
+4. **Other image generation skills** (if installed).
 
-2. **Python/Pillow programmatic generation** (always available as fallback):
-   Create an SVG-style illustration using PIL/Pillow. This approach works for conceptual/flat-vector covers:
-   - Design a composition that maps article concepts to geometric shapes and icons
-   - Use the cool palette colors: Engineering Blue (#2563EB), Navy (#1E3A5F), Cyan (#06B6D4), Amber accent (#F59E0B)
-   - Draw at 2x resolution (2400×1350 for 16:9) for retina quality
-   - Include: grid/dot background pattern, central focal element, satellite concept nodes, connection lines, decorative geometric elements
-   - Save as PNG with `optimize=True`
+If a backend fails with a credential error (`API key not valid`, `Invalid credential`), retrying won't help:
+- List the image models (OpenCode: the `models` tool with `type: "image"`) and the stored credentials (`opencode auth list`). Models from the same provider share one credential, so they fail together.
+- Ask the user which working model to use, or which credential to fix. Pass `model` only after the user picks one.
+- Keep the prompt file; regenerate from it once a backend works.
 
-3. **Other image generation skills** (if installed): Check for any available image generation MCP or skill
+If no backend works, offer the user two options: fix a credential, or draw the cover in the browser yourself ("Code-rendered cover" below). baoyu-cover-image forbids code-rendered substitutes by default, so draw it only after the user agrees. Don't use flat Pillow drawings: they don't match the house style.
 
 #### Cover image prompt design
 
-Regardless of generation method, the conceptual approach is the same:
-1. Analyze article content → identify the core concept and a fitting visual metaphor
-2. Abstract conceptual composition, not realistic scenes
-3. Cool color palette: blues, cyans, with warm accent
-4. Clean geometric shapes, 40-60% whitespace
-5. NO text, NO watermark, NO human figures (unless specifically requested)
+1. Analyze the article → pick the core concept and a visual metaphor (for a workflow or loop: a ring track around a central chip, one station per stage).
+2. Write the prompt in this order: house style (dark background, 3D isometric, neon glow, palette with hex values) → scene → composition → constraints.
+3. Put every readable label in quotes and add "no other text". Keep labels to a few short English words: models misspell long text, and baoyu-cover-image forbids fixing text with code afterwards.
+4. Compose for WeChat's crops: WeChat crops the cover to 2.35:1 for the article card and 1:1 for the share thumbnail. Put the hero exactly in the center and keep important elements inside the central band (top and bottom ~12% background only).
+5. NO logos, NO watermark, NO human figures (unless specifically requested)
+
+#### Code-rendered cover (only after the user agrees)
+
+Start from [templates/neon-cover.html](templates/neon-cover.html): an HTML/SVG scene with a perspective-projected circuit floor, a glowing ring with stations, a 3D chip in the center, glass panels and corner code cards. The comment at the top of its script lists what to change per article.
+
+1. Copy the template to `cover-image/<topic-slug>/`, then change the stations, panel drawings, corner cards and chip icon to fit the article. Labels and code are real text, so they can't be misspelled; keep them short and in English.
+2. Open the file in the browser tool (`file://...`), check the console for errors, and take a full-page PNG screenshot (`fullPage: true`). At devicePixelRatio 2 this gives 3840×2160.
+3. Resize to 2400×1350 with Pillow (`Image.LANCZOS`). If the screenshot is only 1920×1080 (devicePixelRatio 1), keep it as is instead of upscaling.
+4. Look at the result and at both WeChat crops (2.35:1 and a centered 1:1). Panels must not cover the ring's arrowheads, and the top panel must stay inside the 2.35:1 band; adjust `lift` / `shift` or the camera constants and re-render.
+5. Close the page. Keep the HTML in `cover-image/<topic-slug>/` as the source record; it plays the role of the prompt file.
 
 #### Save location
 
-Save the cover image to the blog's image directory:
+Generate into `cover-image/<topic-slug>/` (working directory or temp), check it, then copy it to the blog's image directory. When regenerating, back up the previous cover first.
 ```
 src/content/posts/_images/<post-title>/cover.png
 ```
@@ -244,6 +257,13 @@ src/content/posts/_images/<post-title>/cover.png
 - 尺寸: <width>×<height>
 - 生成方式: <method used>
 - 风格: <type> / <palette> / <rendering> / <text> / <aspect>
+```
+
+If the article has mermaid diagrams, add:
+```
+🖼 流程图图片（备用）
+- 位置: <path>
+- 用法: 粘贴后图里缺字或缺箭头，就删掉那张图，换成这张
 ```
 
 If translation was included, add:
@@ -272,7 +292,7 @@ T0: Fetch source content (if URL)
 T1: Download images + Start translation (can overlap if images finish fast)
 T2: Create blog post (after translation + images ready)
 T3: Start HTTP server (background) + Start cover image generation (background)
-T4: Browser: navigate → style → reload → inject → verify → copy
+T4: Browser: navigate → style → reload → inject → verify → fix mermaid labels → copy → export diagram PNGs
 T5: Kill HTTP server + Collect cover image
 T6: Report all results
 ```
@@ -291,6 +311,8 @@ Relative image paths from the blog project won't render in md-wechat preview. Th
 ### 3) Toast notification for 复制
 The success toast auto-dismisses in ~2 seconds. A successful click = content is in clipboard. Don't waste rounds trying to catch the toast.
 
+To check what was copied (macOS), read the HTML flavor: `osascript -e 'the clipboard as «class HTML»'` returns `«data HTML<hex>»`. Decode the hex and check the first paragraph, the number of `<table` and `<svg`, or a label's width. Don't run `pbcopy` while checking; it overwrites the copied article.
+
 ### 4) Keep browser tab consistent
 Reuse the same tab/targetId across all browser calls within one formatting run.
 
@@ -305,6 +327,31 @@ When `xreach` or `agent-reach` isn't authenticated for Twitter/X, Jina Reader (`
 
 ### 8) Build verification
 Always run `pnpm build` after creating a blog post. The build takes ~60s and validates frontmatter schema, image processing (LQIP), and page generation. A 120s timeout may not be enough — use 300s.
+
+### 9) Mermaid labels get clipped in md-wechat
+md-wechat renders mermaid to SVG and puts each label in a `<foreignObject>` sized when the diagram is drawn. The article styles then add letter spacing to `<p>`, so edge labels (e.g., "不通过") end up wider than their box and get the last character cut off, both in the preview and in the copied HTML. Right before clicking 复制, widen every label that overflows and re-center it:
+
+```js
+document.querySelectorAll('#output .mermaid-diagram svg foreignObject').forEach((f) => {
+  const c = f.firstElementChild
+  if (!c || c.scrollWidth <= +f.getAttribute('width'))
+    return
+  const w = c.scrollWidth + 2
+  f.setAttribute('width', w)
+  const g = f.parentElement
+  const m = /translate\(\s*([-\d.]+)[ ,]+([-\d.]+)\s*\)/.exec(g.getAttribute('transform') || '')
+  if (m)
+    g.setAttribute('transform', `translate(${-w / 2}, ${m[2]})`)
+})
+```
+
+The fix only lives in the page DOM, so run it again if the preview re-renders. Then confirm the new widths in the clipboard HTML (lesson 3).
+
+### 10) Export mermaid diagrams as PNG backups
+The WeChat editor filters some SVG features, so a pasted mermaid diagram may lose text or arrows, and this can't be checked without the WeChat backend. Export each diagram as a PNG next to the cover so the user can swap it in:
+1. Clone the diagram's SVG into a wrapper appended to `document.body`: `position:fixed; left:0; top:0; z-index:2147483647; background:#fff; padding:32px`, with the SVG at `width:960px; max-width:none; height:auto`. Outside `#output` the letter spacing no longer applies, so the labels fit.
+2. Take a viewport screenshot, then crop the wrapper's rect × `devicePixelRatio` with Pillow. CSS `zoom` on the original diagram does not enlarge an element screenshot.
+3. Remove the wrapper and save the PNG as `src/content/posts/_images/<post-title>/<name>-diagram.png`.
 
 ## Batch mode
 
